@@ -1,0 +1,109 @@
+name: restaraunt_app
+description: A new Flutter project.
+
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+  im_stepper: ^1.0.1+1
+  ftoast: ^2.0.0
+  fsuper: ^2.1.1
+  auto_size_text: ^3.0.0
+  lottie: ^1.4.2
+  animated_bottom_navigation_bar: ^1.1.0
+  iconsax: ^0.0.8
+  google_fonts: ^3.0.1
+  dotted_decoration: ^2.0.0
+  flutter_swipe_action_cell: ^3.0.4
+  badges: ^2.0.3
+  percent_indicator: ^4.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^2.0.0
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - lottie/search.json
+    - lottie/not_login.json
+    - images/login_background.jpg
+    - images/apple-black-logo.png
+    - images/apple-logo.png
+    - images/facebook-logo.png
+    - images/google-logo.png
+    - images/Dessert/1.png
+    - images/Dessert/2.png
+    - images/Dessert/3.png
+    - images/Dessert/4.png
+    - images/Drinks/Borjomi.jpeg
+    - images/Drinks/peach_juice.jpeg
+    - images/Drinks/Pepsi.jpeg
+    - images/Drinks/pineapple_juice.jpeg
+    - images/Drinks/Schweppes.jpeg
+    - images/Main_dishes/1.png
+    - images/Main_dishes/2.png
+    - images/Main_dishes/3.png
+    - images/Main_dishes/4.png
+    - images/Main_dishes/5.png
+    - images/Main_dishes/6.png
+    - images/Salad/1.png
+    - images/Salad/2.png
+    - images/Salad/3.png
+    - images/Soup/1.png
+    - images/Soup/2.png
+    - images/order_example.png
+    - images/categories/all.png
+    - images/categories/bowl.png
+    - images/categories/dessert.png
+    - images/categories/main.png
+    - images/categories/soup.png
+    - images/restaraunt-logo.png
+    - images/courier.png
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Ruberoid
+      fonts:
+        - asset: fonts/Ruberoid-Regular.ttf
+        - asset: fonts/Ruberoid-Bold.ttf
+          weight: 700
+    - family: KyivTypeSans
+      fonts:
+        - asset: fonts/KyivTypeSans.ttf
+    - family: Somatic
+      fonts:
+        - asset: fonts/Somatic-Rounded.otf
+    - family: MazzardSoft
+      fonts:
+        - asset: fonts/MazzardSoft.ttf
+    - family: uaBrand
+      fonts:
+        - asset: fonts/ua-BRAND-regular.otf
+        - asset: fonts/ua-BRAND-bold.otf
+          weight: 700  
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
