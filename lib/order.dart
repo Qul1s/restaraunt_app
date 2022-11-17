@@ -66,6 +66,8 @@ class ReadyOrderList{
     ReadyOrder(
     number: 52354,
     dishOrder: [DishOrder(name: "Курячий суп з лапшою", price: 110, count: 2, image: "images/Soup/2.png"),
+                DishOrder(name: "Курячі крильця", price: 230, count: 2, image: "images/Main_dishes/5.png"),
+                DishOrder(name: "Курячі крильця", price: 230, count: 2, image: "images/Main_dishes/5.png"),
                 DishOrder(name: "Курячі крильця", price: 230, count: 2, image: "images/Main_dishes/5.png")],
     price: 380,
     date: "12.13.2013",
