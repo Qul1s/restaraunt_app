@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'login_page.dart';
 import 'order.dart';
+import 'order_details.dart';
 import 'register_page.dart';
 
  class OrderPage extends StatefulWidget {
@@ -136,6 +137,7 @@ import 'register_page.dart';
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           width: MediaQuery.of(context).size.width*0.9,
                           child: ListView.separated(
+                            clipBehavior: Clip.antiAlias,
                             itemCount: ReadyOrderList.readyOrder.length,
                             separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.02),
                             shrinkWrap: true,
@@ -159,7 +161,7 @@ import 'register_page.dart';
                                         ],
                                         child:GestureDetector( 
                                           onTap: () {
-
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderDetailsPage(readyOrder: ReadyOrderList.readyOrder[index])));
                                           },
                                     child: Container(
                                     padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,

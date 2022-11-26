@@ -1,6 +1,9 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:blur/blur.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'order.dart';
 
  // ignore: must_be_immutable
@@ -53,7 +56,7 @@ import 'order.dart';
                     width: MediaQuery.of(context).size.width,
                     decoration: const BoxDecoration(
                       color: Color.fromRGBO(245, 245, 245, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -69,12 +72,14 @@ import 'order.dart';
                                                     top: MediaQuery.of(context).size.height* 0.02),
                             width: MediaQuery.of(context).size.width* 0.5,
                             height: MediaQuery.of(context).size.height* 0.04,
-                            child: Text("Ваше замовлення", 
-                              style: GoogleFonts.poiretOne(
+                            child: AutoSizeText("Замовлення №${readyOrder.number}", 
+                              stepGranularity: 1,
+                              minFontSize: 12,
+                              style: GoogleFonts.montserrat(
                                     textStyle: const TextStyle(
                                     color: Color.fromRGBO(31, 31, 47, 1),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w800)))),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500)))),
                           GestureDetector(
                             onTap:() {
                               Navigator.pop(context);
@@ -100,33 +105,32 @@ import 'order.dart';
                               child: const Icon(Icons.close_rounded, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                         ))
                         ],),
-                        Expanded( 
-                            child: Container(
-                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                          SizedBox(
+                              height: MediaQuery.of(context).size.height*0.43,
                               width: MediaQuery.of(context).size.width* 0.9,
                               child: ListView.separated(
-                                      clipBehavior: Clip.none,
+                                      shrinkWrap: false,
                                       itemCount: readyOrder.dishOrder.length,
-                                      separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.02),
+                                      separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.015),
                                       itemBuilder: (BuildContext context, int index){
                                           return  Container(
-                                            height: MediaQuery.of(context).size.height* 0.15,
+                                            height: MediaQuery.of(context).size.height* 0.12,
                                             decoration: const BoxDecoration(
                                               color: Color.fromRGBO(255, 255, 255, 1),
-                                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                                              borderRadius: BorderRadius.all(Radius.circular(25)),
                                             ),
                                             child: Row(
                                               mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Container(
-                                                  padding: EdgeInsets.all(MediaQuery.of(context).size.width* 0.05),
-                                                  width: MediaQuery.of(context).size.width* 0.32,
-                                                  height: MediaQuery.of(context).size.width* 0.32,
+                                                  padding: EdgeInsets.all(MediaQuery.of(context).size.width* 0.03),
+                                                  width: MediaQuery.of(context).size.height* 0.12,
+                                                  height: MediaQuery.of(context).size.height* 0.12,
                                                   alignment: Alignment.center,
                                                   child: Image.asset(
-                                                          width: MediaQuery.of(context).size.width* 0.32,
-                                                          height: MediaQuery.of(context).size.width* 0.32,
+                                                          width: MediaQuery.of(context).size.height* 0.12,
+                                                          height: MediaQuery.of(context).size.height* 0.12,
                                                           readyOrder.dishOrder[index].image,
                                                           fit: BoxFit.fill)),
                                                 Column(
@@ -139,86 +143,147 @@ import 'order.dart';
                                                                           color: Color.fromRGBO(31, 31, 47, 1),
                                                                           fontSize: 20,
                                                                           fontWeight: FontWeight.w800))),
-                                                          Container(
-                                                            width: MediaQuery.of(context).size.width* 0.54,
-                                                            margin: EdgeInsets.only(right: MediaQuery.of(context).size.width* 0.03),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                RichText(
-                                                                text: TextSpan(
-                                                                children: <TextSpan>[
-                                                                    const TextSpan(text: "₴ ",                                                                 
-                                                                    style: TextStyle(
-                                                                      color: Color.fromRGBO(254, 182, 102, 1),
-                                                                      fontSize: 18,
-                                                                      fontWeight: FontWeight.w700)),
-                                                                    TextSpan(text: " ${readyOrder.dishOrder[index].price*readyOrder.dishOrder[index].count}",                                                                  
-                                                                        style: GoogleFonts.nunito(
-                                                                          textStyle: const TextStyle(
-                                                                          color: Color.fromRGBO(31, 31, 47, 1),
-                                                                          fontSize: 20,
-                                                                          fontWeight: FontWeight.w600))),
-                                                                  ],)),
-                                                          ],)),
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                              width: MediaQuery.of(context).size.width* 0.6,
+                                                              margin: EdgeInsets.only(right: MediaQuery.of(context).size.width* 0.03),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  RichText(
+                                                                  text: TextSpan(
+                                                                  children: <TextSpan>[
+                                                                      const TextSpan(text: "₴ ",                                                                 
+                                                                      style: TextStyle(
+                                                                        color: Color.fromRGBO(254, 182, 102, 1),
+                                                                        fontSize: 18,
+                                                                        fontWeight: FontWeight.w700)),
+                                                                      TextSpan(text: " ${readyOrder.dishOrder[index].price*readyOrder.dishOrder[index].count}",                                                                  
+                                                                          style: GoogleFonts.nunito(
+                                                                            textStyle: const TextStyle(
+                                                                            color: Color.fromRGBO(31, 31, 47, 1),
+                                                                            fontSize: 20,
+                                                                            fontWeight: FontWeight.w600))),
+                                                                    ],)),
+                                                                Text("x${readyOrder.dishOrder[index].count}",
+                                                                  style: GoogleFonts.nunito(
+                                                                              textStyle: const TextStyle(
+                                                                              color: Color.fromRGBO(31, 31, 47, 1),
+                                                                              fontSize: 20,
+                                                                              fontWeight: FontWeight.w600))),
+                                                          ],))
+                                                          ]),
                                                         ],),
                                             ]),
                                           );
                                 },
-                              ))
+                              )
                         ),
-                        Container(
-                          //decoration: DottedDecoration(shape: Shape.line, linePosition: LinePosition.top,),
-                          decoration: BoxDecoration(color: additionalColor),
-                          alignment: Alignment.topCenter,
-                          width: MediaQuery.of(context).size.width,
-                          child:Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
-                                child: Text("Сума:", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.w800)))),     
-                              Container(
-                                margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02,
-                                                        top: MediaQuery.of(context).size.height*0.03),
-                                child: Text("${readyOrder.price}₴", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600))),                                ),
-                        ],)),    
-                        ],)),
-              statusOfProcessing(),
-                        
+                        Container( 
+                          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.01,
+                                                    bottom: MediaQuery.of(context).size.height*0.01),
+                          alignment: Alignment.center,
+                          height: MediaQuery.of(context).size.height*0.15,
+                          width: MediaQuery.of(context).size.width*0.9,
+                          child:
+                            Container(
+                              padding: EdgeInsets.only(
+                                                  left: MediaQuery.of(context).size.width*0.04,
+                                                    right: MediaQuery.of(context).size.width*0.04),
+                              height: MediaQuery.of(context).size.height*0.13,
+                              decoration: DottedDecoration(shape: Shape.box,
+                                                        borderRadius: BorderRadius.circular(25),),
+                              child:Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("Сума:", 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700))),     
+                                    Text("${readyOrder.price}₴", 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600))),
+                                          ],),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("Адреса:", 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700))),     
+                                    Text(readyOrder.address, 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600))),
+                                          ],),
+                                  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("Дата:", 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700))),     
+                                    Text(readyOrder.date, 
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.montserrat(
+                                          textStyle: const TextStyle(
+                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600))),
+                                          ],),
+                              ],
+                            ))),    
+                        ],)), 
+                        statusOfProcessing(),             
         ]));
     }
 
     Widget statusOfProcessing(){
+      if(readyOrder.status == "В процесі" || readyOrder.status == "Виконаний"){
       switch(readyOrder.statufOfProcessing){
-        case 1: return  SizedBox( 
+        case 1: return  Container( 
+              decoration: const BoxDecoration(color: Colors.red,
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                                                            topRight: Radius.circular(30))), 
               height: MediaQuery.of(context).size.height*0.35,
               child: SingleChildScrollView(
                 controller: _controller,
                 child: 
                   Container(
-                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,
-                                                                right: MediaQuery.of(context).size.width*0.07),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), 
-                                            color: const Color.fromRGBO(255, 255, 255, 1)),
-                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.03,
+                                                                right: MediaQuery.of(context).size.width*0.01),
+                  decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
+                                                                            topRight: Radius.circular(30)), 
+                                            color: Color.fromRGBO(255, 255, 255, 1)),
+                  width: MediaQuery.of(context).size.width*0.9,
                   height: MediaQuery.of(context).size.height*0.53,
                   child: 
-              Row(children: [
+              Row(
+                children: [
                 Stack(
                   alignment: Alignment.topCenter,
                   children: [
@@ -1440,7 +1505,236 @@ import 'order.dart';
                 ])])
             )));
       }
-      
+      }
+      else{
+        return Stack(children: [
+              Blur(
+                borderRadius: BorderRadius.circular(30),
+                blur: 5,
+                child: SizedBox( 
+              height: MediaQuery.of(context).size.height*0.35,
+              child: SingleChildScrollView(
+                child: 
+                  Container(
+                  padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,
+                                                                right: MediaQuery.of(context).size.width*0.07),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), 
+                                            color: const Color.fromRGBO(255, 255, 255, 1)),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height*0.45,
+                  child: 
+              Row(children: [
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.01),
+                      color: Colors.black,
+                      height: MediaQuery.of(context).size.height*0.4,
+                      width: MediaQuery.of(context).size.width*0.0025,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.01),
+                          width: MediaQuery.of(context).size.width*0.15,
+                          height: MediaQuery.of(context).size.height*0.07,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), 
+                                          color: const Color.fromRGBO(254, 182, 102, 1)),
+                          child: const Icon(Icons.check, size: 28)),
+                          Container(
+                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                              width: MediaQuery.of(context).size.width*0.13,
+                              height: MediaQuery.of(context).size.height*0.06,
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), 
+                                              color: const Color.fromRGBO(222, 222, 222, 1)),
+                              child: const Icon(Icons.delivery_dining_outlined, size: 28)),
+                         Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                          width: MediaQuery.of(context).size.width*0.13,
+                          height: MediaQuery.of(context).size.height*0.06,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), 
+                                          color: const Color.fromRGBO(222, 222, 222, 1)),
+                          child: const Icon(Icons.shopping_bag, size: 25)),
+                         Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                          width: MediaQuery.of(context).size.width*0.13,
+                          height: MediaQuery.of(context).size.height*0.06,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), 
+                                          color: const Color.fromRGBO(222, 222, 222, 1)),
+                          child: const Icon(Icons.restaurant_rounded, size: 24)),
+                         Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                          width: MediaQuery.of(context).size.width*0.13,
+                          height: MediaQuery.of(context).size.height*0.06,
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), 
+                                          color: const Color.fromRGBO(222, 222, 222, 1)),
+                          child: const Icon(Icons.timer, size: 25)),
+                      ],
+                    )
+                  ],
+                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container( 
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
+                    height: MediaQuery.of(context).size.height*0.06,
+                    child:Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [ 
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.49,
+                          margin: EdgeInsets.only(left:  MediaQuery.of(context).size.width*0.05),
+                          child: Text("Виконано", style: GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: textColor,
+                                                                            fontSize: 18,
+                                                                            decoration: TextDecoration.none,
+                                                                            fontWeight: FontWeight.w800)))),   
+                        Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width*0.15,
+                                child: Text("22:10", style: GoogleFonts.poiretOne(
+                                                                                  textStyle: const TextStyle(
+                                                                                  color: Color.fromRGBO(254, 182, 102, 1),
+                                                                                  fontSize: 14,
+                                                                                  decoration: TextDecoration.none,
+                                                                                  fontWeight: FontWeight.w800)))),                                               
+                  ],)),
+                  Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.035),
+                    height: MediaQuery.of(context).size.height*0.06,
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.49,
+                          margin: EdgeInsets.only(left:  MediaQuery.of(context).size.width*0.05),
+                          child: Text("У дорозі", style: GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: textColor,
+                                                                            fontSize: 18,
+                                                                            decoration: TextDecoration.none,
+                                                                            fontWeight: FontWeight.w800)))),                                                 
+                        Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width*0.15,
+                                child: Text("21:40", style: GoogleFonts.poiretOne(
+                                                                                  textStyle: const TextStyle(
+                                                                                  color: Color.fromRGBO(254, 182, 102, 1),
+                                                                                  fontSize: 14,
+                                                                                  decoration: TextDecoration.none,
+                                                                                  fontWeight: FontWeight.w800)))), 
+                  ],)),
+                  Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                    height: MediaQuery.of(context).size.height*0.06,
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.49,
+                          margin: EdgeInsets.only(left:  MediaQuery.of(context).size.width*0.05),
+                          child: Text("Пакується", style: GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: textColor,
+                                                                            fontSize: 18,
+                                                                            decoration: TextDecoration.none,
+                                                                            fontWeight: FontWeight.w800)))),                                                 
+                        Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width*0.15,
+                                child: Text("21:25", style: GoogleFonts.poiretOne(
+                                                                                  textStyle: const TextStyle(
+                                                                                  color: Color.fromRGBO(254, 182, 102, 1),
+                                                                                  fontSize: 14,
+                                                                                  decoration: TextDecoration.none,
+                                                                                  fontWeight: FontWeight.w800)))), 
+                  ],)),
+                  Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03), 
+                    height: MediaQuery.of(context).size.height*0.06,
+                    child:Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.49,
+                          margin: EdgeInsets.only(left:  MediaQuery.of(context).size.width*0.05),
+                          child: Text("Готується", style: GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: textColor,
+                                                                            fontSize: 18,
+                                                                            decoration: TextDecoration.none,
+                                                                            fontWeight: FontWeight.w800)))),                                                 
+                        Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width*0.15,
+                                child: Text("20:40", style: GoogleFonts.poiretOne(
+                                                                                  textStyle: const TextStyle(
+                                                                                  color: Color.fromRGBO(254, 182, 102, 1),
+                                                                                  fontSize: 14,
+                                                                                  decoration: TextDecoration.none,
+                                                                                  fontWeight: FontWeight.w800)))), 
+                  ],)),
+                  Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03),
+                    height: MediaQuery.of(context).size.height*0.06,
+                    child:Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width*0.49,
+                          margin: EdgeInsets.only(left:  MediaQuery.of(context).size.width*0.05),
+                          child: Text("В обробці", style: GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: textColor,
+                                                                            fontSize: 18,
+                                                                            decoration: TextDecoration.none,
+                                                                            fontWeight: FontWeight.w800)))),                                                 
+                        Container(
+                                alignment: Alignment.centerRight,
+                                width: MediaQuery.of(context).size.width*0.15,
+                                child: Text("20:20", style: GoogleFonts.poiretOne(
+                                                                                  textStyle: const TextStyle(
+                                                                                  color: Color.fromRGBO(254, 182, 102, 1),
+                                                                                  fontSize: 14,
+                                                                                  decoration: TextDecoration.none,
+                                                                                  fontWeight: FontWeight.w800)))), 
+                  ],)),
+                ])])
+            )))),
+            Container(
+              height: MediaQuery.of(context).size.height* 0.35,
+              alignment: Alignment.center,
+              child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        AutoSizeText("Замовлення скасовано",
+                                            style: GoogleFonts.montserrat(
+                                                                          textStyle: TextStyle(
+                                                                          color: textColor,
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.w700)),
+                                            minFontSize: 16,
+                                            stepGranularity: 2,
+                                            textAlign: TextAlign.center),
+                                        Lottie.asset('lottie/error.json',
+                                          width: MediaQuery.of(context).size.width* 0.4,
+                                          height: MediaQuery.of(context).size.height* 0.2
+                                          ),
+            ]))
+            ]);
+      }
     }
   }
 

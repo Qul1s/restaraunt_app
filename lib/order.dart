@@ -61,7 +61,7 @@ class ReadyOrderList{
     time: "10:35",
     address: "проспект Любомира Гузара, 11",
     status: "Відхилений",
-    statufOfProcessing: 0),
+    statufOfProcessing: 1),
     
     ReadyOrder(
     number: 52354,
@@ -70,9 +70,9 @@ class ReadyOrderList{
                 DishOrder(name: "Курячі крильця", price: 230, count: 2, image: "images/Main_dishes/5.png"),
                 DishOrder(name: "Курячі крильця", price: 230, count: 2, image: "images/Main_dishes/5.png")],
     price: 380,
-    date: "12.13.2013",
+    date: "12.07.2013",
     time: "20:00",
-    address: "проспект Любомира Гузара, 11",
+    address: "пр. Любомира Гузара, 11",
     status: "В процесі",
     statufOfProcessing: 4)];
 }

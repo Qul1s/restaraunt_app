@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restaraunt_app/about_us.dart';
 
 import 'login_page.dart';
 import 'register_page.dart';
@@ -279,30 +280,32 @@ class ProfilePage extends StatefulWidget{
                                   height: MediaQuery.of(context).size.height*0.0005,
                                   width: MediaQuery.of(context).size.width*0.7,
                                   color: const Color.fromRGBO(90, 90, 90, 1)),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                      height: MediaQuery.of(context).size.width*0.1,
-                                      width: MediaQuery.of(context).size.width*0.1,
-                                      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                            color: Color.fromRGBO(230, 230, 230, 1),),
-                                      child: const Icon(Icons.info_outline_rounded, size: 25, color: Colors.black),
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*0.5,
-                                      child: Text("Інформація про нас", style: GoogleFonts.rubik(
-                                              textStyle: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500
-                                              )))),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width*0.1,
-                                      child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const AboutUsPage())),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          height: MediaQuery.of(context).size.width*0.1,
+                                          width: MediaQuery.of(context).size.width*0.1,
+                                          decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                                color: Color.fromRGBO(230, 230, 230, 1),),
+                                          child: const Icon(Icons.info_outline_rounded, size: 25, color: Colors.black),
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context).size.width*0.5,
+                                          child: Text("Інформація про нас", style: GoogleFonts.rubik(
+                                                  textStyle: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500
+                                                  )))),
+                                        Container(
+                                          width: MediaQuery.of(context).size.width*0.1,
+                                          child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
+                                        ),
+                                      ],
+                                    )),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
