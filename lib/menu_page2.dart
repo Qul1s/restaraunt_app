@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'dishes.dart';
 import 'order.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutterfire_ui/database.dart';
 
 
   class MenuPage extends StatefulWidget {
@@ -346,12 +349,16 @@ Widget areaField(){
                                       ])));
     }
     else{
+      final menuQuery = FirebaseDatabase.instance.ref('Menu');
       return Expanded( child: Container( 
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           alignment: Alignment.topCenter,
-                          child: GridView.builder(
+                          child: FirebaseDatabaseQueryBuilder(
+                                  query: menuQuery,
+                                  builder: (context, snapshot, _) { 
+                                  return GridView.builder(
                             controller: _controller,
-                            itemCount: dishesList.length,
+                            itemCount: snapshot.docs.length,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 childAspectRatio: (itemWidth/itemHeight),
                                 crossAxisCount: 2,
@@ -362,6 +369,10 @@ Widget areaField(){
                                                     right: MediaQuery.of(context).size.width*0.04),
                             shrinkWrap: true,
                               itemBuilder: (BuildContext context, int index){
+                                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                  snapshot.fetchMore();
+                                  } 
+                                final dish = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
                                 return GestureDetector(
                                   //onTap: () => showDialogWindow(dishes[index], context),
                                   child:Container(
@@ -391,7 +402,7 @@ Widget areaField(){
                                                 topLeft: Radius.circular(8),
                                                 topRight: Radius.circular(8),
                                               ),
-                                          child: Image.asset(dishesList[index].image, 
+                                          child: Image.asset(dish["image"], 
                                                             fit: BoxFit.contain)),
                                         GestureDetector(
                                           onTap: (() async {
@@ -413,7 +424,7 @@ Widget areaField(){
                                                   duration: const Duration(milliseconds: 250),
                                                   child:Container(
                                             alignment: Alignment.topRight,
-                                            child: returnIcon(dishesList[index].name)
+                                            child: returnIcon(dish["name"])
                                         )))                       
                                       ],),
                                       Container(
@@ -421,7 +432,7 @@ Widget areaField(){
                                         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02,
                                                                 left: MediaQuery.of(context).size.width*0.01),
                                         alignment: Alignment.topLeft,
-                                        child: Text(dishesList[index].name,
+                                        child: Text(dish["name"],
                                             softWrap: true,
                                             style: GoogleFonts.poiretOne(
                                                 textStyle: TextStyle(
@@ -443,7 +454,7 @@ Widget areaField(){
                                                 color: Color.fromRGBO(254, 182, 102, 1),
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.bold))),
-                                            Text(dishesList[index].price.toString(),
+                                            Text(dish["price"].toString(),
                                               style: GoogleFonts.nunito(
                                               textStyle: TextStyle(
                                               color: textColor,
@@ -480,7 +491,7 @@ Widget areaField(){
                                           ],))
                                   ],),
                                   ));
-                              })));
+                              });})));
     }
   }
 
@@ -671,6 +682,7 @@ Widget areaField(){
     }
 
 
+// ignore: non_constant_identifier_names
 void ShowDialog(context){
   showDialog<String>(
                  context: context,
@@ -927,9 +939,9 @@ void ShowDialog(context){
 }
   int sumOfElements(){
     int sum = 0; 
-    OrderList.order.forEach((element){
+    for (var element in OrderList.order) {
       sum += element.price*element.count;
-     });
+     }
   return sum;
 } 
 }

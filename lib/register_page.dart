@@ -17,6 +17,7 @@ class _RegisterState extends State<RegisterPage> {
   Color mainColor = const Color.fromRGBO(254, 182, 102, 1);
   Color additionalColor = const Color.fromRGBO(40, 40, 40, 1);
 
+  // ignore: prefer_typing_uninitialized_variables
   var currentFocus;
   // ignore: prefer_final_fields
   final TextEditingController emailController = TextEditingController();

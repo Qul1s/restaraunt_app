@@ -108,6 +108,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
   
 
 
+// ignore: non_constant_identifier_names
 void ShowDialog(context){
   showDialog<String>(
                  context: context,
@@ -364,9 +365,9 @@ void ShowDialog(context){
 }
   int sumOfElements(){
     int sum = 0; 
-    OrderList.order.forEach((element){
+    for (var element in OrderList.order) {
       sum += element.price*element.count;
-     });
+     }
   return sum;
 } 
 }

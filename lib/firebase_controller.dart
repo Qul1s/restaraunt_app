@@ -4,13 +4,13 @@ class FirebaseController{
   String phone = "";
 
 
-  bool setMailOrPhone(String _text){
-    if(_text.contains("@")){
-        setMail(_text);
+  bool setMailOrPhone(String text){
+    if(text.contains("@")){
+        setMail(text);
         return true;
       }
     else{
-        setPhone(_text);
+        setPhone(text);
         return false;
       }
   }

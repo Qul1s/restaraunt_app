@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+// ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -93,126 +94,120 @@ class AboutUsPage extends StatefulWidget {
                         ],
                     ),
               ])),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height*0.49,
                 width: MediaQuery.of(context).size.width*0.9,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-              Container(
-                child: 
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Номер телефону",
-                      style: GoogleFonts.poiretOne(
-                            textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800))),
-                    Container(
-                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
-                                              bottom: MediaQuery.of(context).size.height* 0.0075,
-                                              right: MediaQuery.of(context).size.width* 0.03,
-                                              left: MediaQuery.of(context).size.width* 0.03),
-                      height: MediaQuery.of(context).size.height* 0.07,
-                      decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text("+380678964936",
-                          style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500))),
-                        Container(
-                                                  decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),),
-                                                  width: MediaQuery.of(context).size.height* 0.055,
-                                                  height: MediaQuery.of(context).size.height* 0.055,
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(Icons.phone, size: 25)),
-                      ],
-                    ))    
-                            ])),
-               Container(
-                child: 
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Адреса",
-                      style: GoogleFonts.poiretOne(
-                            textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800))),
-                    Container(
-                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
-                                              bottom: MediaQuery.of(context).size.height* 0.0075,
-                                              right: MediaQuery.of(context).size.width* 0.03,
-                                              left: MediaQuery.of(context).size.width* 0.03),
-                      height: MediaQuery.of(context).size.height* 0.07,
-                      decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text("вул. Дружби народів 31",
-                          style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500))),
-                        Container(
-                                                  decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),),
-                                                  width: MediaQuery.of(context).size.height* 0.055,
-                                                  height: MediaQuery.of(context).size.height* 0.055,
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(Icons.location_on, size: 25)),
-                      ],
-                    ))    
-                            ])),
-               Container(
-                child: 
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Графік роботи",
-                      style: GoogleFonts.poiretOne(
-                            textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800))),
-                    Container(
-                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
-                                              bottom: MediaQuery.of(context).size.height* 0.0075,
-                                              right: MediaQuery.of(context).size.width* 0.03,
-                                              left: MediaQuery.of(context).size.width* 0.03),
-                      height: MediaQuery.of(context).size.height* 0.07,
-                      decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
-                                                    borderRadius: BorderRadius.all(Radius.circular(15)),),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text("Щодня 08:00-22:00",
-                          style: GoogleFonts.montserrat(
-                                textStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500))),
-                      ],
-                    ))    
-                            ])),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Номер телефону",
+                    style: GoogleFonts.poiretOne(
+                          textStyle: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800))),
+                  Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
+                                            bottom: MediaQuery.of(context).size.height* 0.0075,
+                                            right: MediaQuery.of(context).size.width* 0.03,
+                                            left: MediaQuery.of(context).size.width* 0.03),
+                    height: MediaQuery.of(context).size.height* 0.07,
+                    decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
+                                                  borderRadius: BorderRadius.all(Radius.circular(15)),),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                      Text("+380678964936",
+                        style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500))),
+                      Container(
+                                                decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
+                                                  borderRadius: BorderRadius.all(Radius.circular(15)),),
+                                                width: MediaQuery.of(context).size.height* 0.055,
+                                                height: MediaQuery.of(context).size.height* 0.055,
+                                                alignment: Alignment.center,
+                                                child: const Icon(Icons.phone, size: 25)),
+                    ],
+                  ))    
+                          ]),
+               Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Text("Адреса",
+                     style: GoogleFonts.poiretOne(
+                           textStyle: const TextStyle(
+                           color: Colors.black,
+                           fontSize: 20,
+                           fontWeight: FontWeight.w800))),
+                   Container(
+                     margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
+                                             bottom: MediaQuery.of(context).size.height* 0.0075,
+                                             right: MediaQuery.of(context).size.width* 0.03,
+                                             left: MediaQuery.of(context).size.width* 0.03),
+                     height: MediaQuery.of(context).size.height* 0.07,
+                     decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
+                                                   borderRadius: BorderRadius.all(Radius.circular(15)),),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                       Text("вул. Дружби народів 31",
+                         style: GoogleFonts.montserrat(
+                               textStyle: const TextStyle(
+                               color: Colors.black,
+                               fontSize: 16,
+                               fontWeight: FontWeight.w500))),
+                       Container(
+                                                 decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
+                                                   borderRadius: BorderRadius.all(Radius.circular(15)),),
+                                                 width: MediaQuery.of(context).size.height* 0.055,
+                                                 height: MediaQuery.of(context).size.height* 0.055,
+                                                 alignment: Alignment.center,
+                                                 child: const Icon(Icons.location_on, size: 25)),
+                     ],
+                   ))    
+                           ]),
+               Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Text("Графік роботи",
+                     style: GoogleFonts.poiretOne(
+                           textStyle: const TextStyle(
+                           color: Colors.black,
+                           fontSize: 20,
+                           fontWeight: FontWeight.w800))),
+                   Container(
+                     margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.0075,
+                                             bottom: MediaQuery.of(context).size.height* 0.0075,
+                                             right: MediaQuery.of(context).size.width* 0.03,
+                                             left: MediaQuery.of(context).size.width* 0.03),
+                     height: MediaQuery.of(context).size.height* 0.07,
+                     decoration: const BoxDecoration(color: Color.fromRGBO(255, 255, 255, 1),
+                                                   borderRadius: BorderRadius.all(Radius.circular(15)),),
+                     child: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                       Text("Щодня 08:00-22:00",
+                         style: GoogleFonts.montserrat(
+                               textStyle: const TextStyle(
+                               color: Colors.black,
+                               fontSize: 16,
+                               fontWeight: FontWeight.w500))),
+                     ],
+                   ))    
+                           ]),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const [

@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
@@ -174,13 +176,12 @@ class SavedAddressPage extends StatefulWidget {
       }
 
 
+// ignore: non_constant_identifier_names
 void ShowDialog(context){
-  Color mainColor = const Color.fromRGBO(254, 182, 102, 1);
+
   Color additionalColor = const Color.fromRGBO(40, 40, 40, 1);
   // ignore: prefer_final_fields
-  bool _submitted = false;
-  // ignore: prefer_final_fields
-  var _text = '';
+  bool submitted = false;
 
   final TextEditingController streetController = TextEditingController();
   final TextEditingController buildingContoller = TextEditingController();
@@ -273,14 +274,14 @@ void ShowDialog(context){
                           height: MediaQuery.of(context).size.height * 0.03,
                           alignment: Alignment.topCenter,
                           child: TextField(
-                            onChanged: (text) => setState(() => _text),
+                            onChanged: (text) => setState(() => text),
                             controller: streetController,
                             obscureText: false,
                             textAlign: TextAlign.left,
                             cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                             textAlignVertical: TextAlignVertical.bottom,
                             decoration: InputDecoration(
-                              errorText: _submitted
+                              errorText: submitted
                                   ? errorText(streetController)
                                   : null,
                               focusedBorder: UnderlineInputBorder(
@@ -317,14 +318,14 @@ void ShowDialog(context){
                            height: MediaQuery.of(context).size.height * 0.03,
                            alignment: Alignment.topCenter,
                            child: TextField(
-                             onChanged: (text) => setState(() => _text),
+                             onChanged: (text) => setState(() => text),
                              controller: buildingContoller,
                              obscureText: false,
                              textAlign: TextAlign.left,
                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                              textAlignVertical: TextAlignVertical.bottom,
                              decoration: InputDecoration(
-                               errorText: _submitted
+                               errorText: submitted
                                    ? errorText(buildingContoller)
                                    : null,
                                focusedBorder: UnderlineInputBorder(
@@ -361,14 +362,14 @@ void ShowDialog(context){
                            height: MediaQuery.of(context).size.height * 0.03,
                            alignment: Alignment.topCenter,
                            child: TextField(
-                             onChanged: (text) => setState(() => _text),
+                             onChanged: (text) => setState(() => text),
                              controller: entranceContoller,
                              obscureText: false,
                              textAlign: TextAlign.left,
                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                              textAlignVertical: TextAlignVertical.bottom,
                              decoration: InputDecoration(
-                               errorText: _submitted
+                               errorText: submitted
                                    ? errorText(entranceContoller)
                                    : null,
                                focusedBorder: UnderlineInputBorder(
@@ -405,14 +406,14 @@ void ShowDialog(context){
                            height: MediaQuery.of(context).size.height * 0.03,
                            alignment: Alignment.topCenter,
                            child: TextField(
-                             onChanged: (text) => setState(() => _text),
+                             onChanged: (text) => setState(() => text),
                              controller: floorContoller,
                              obscureText: false,
                              textAlign: TextAlign.left,
                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                              textAlignVertical: TextAlignVertical.bottom,
                              decoration: InputDecoration(
-                               errorText: _submitted
+                               errorText: submitted
                                    ? errorText(floorContoller)
                                    : null,
                                focusedBorder: UnderlineInputBorder(
@@ -449,14 +450,14 @@ void ShowDialog(context){
                                 height: MediaQuery.of(context).size.height * 0.03,
                                 alignment: Alignment.topCenter,
                                 child: TextField(
-                                  onChanged: (text) => setState(() => _text),
+                                  onChanged: (text) => setState(() => text),
                                   controller: apartmentContoller,
                                   obscureText: false,
                                   textAlign: TextAlign.left,
                                   cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                                   textAlignVertical: TextAlignVertical.bottom,
                                   decoration: InputDecoration(
-                                    errorText: _submitted
+                                    errorText: submitted
                                         ? errorText(apartmentContoller)
                                         : null,
                                     focusedBorder: UnderlineInputBorder(

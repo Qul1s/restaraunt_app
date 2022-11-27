@@ -22,7 +22,7 @@ import 'package:flutter/material.dart';
     Widget build(BuildContext context) {
       return GestureDetector( 
           onTap: unfocus,
-          child: Scaffold(
+          child: const Scaffold(
             
           ));
     }

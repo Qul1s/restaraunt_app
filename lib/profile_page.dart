@@ -130,7 +130,7 @@ class ProfilePage extends StatefulWidget{
                               width: MediaQuery.of(context).size.width*0.8,
                               height: MediaQuery.of(context).size.height*0.0005,
                               color: const Color.fromRGBO(60, 60, 60, 1)),]),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width*0.8,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,7 +214,7 @@ class ProfilePage extends StatefulWidget{
                                                             color: Color.fromRGBO(230, 230, 230, 1),),
                                       child: const Icon(Icons.settings, size: 25, color: Colors.black),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.5,
                                       child: Text("Налаштування", style: GoogleFonts.rubik(
                                               textStyle: const TextStyle(
@@ -222,7 +222,7 @@ class ProfilePage extends StatefulWidget{
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500
                                               )))),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.1,
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),
@@ -238,7 +238,7 @@ class ProfilePage extends StatefulWidget{
                                                             color: Color.fromRGBO(230, 230, 230, 1),),
                                       child: const Icon(Icons.home_rounded, size: 25, color: Colors.black),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.5,
                                       child: Text("Збереження адреси", style: GoogleFonts.rubik(
                                               textStyle: const TextStyle(
@@ -246,7 +246,7 @@ class ProfilePage extends StatefulWidget{
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500
                                               )))),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.1,
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),
@@ -262,7 +262,7 @@ class ProfilePage extends StatefulWidget{
                                                             color: Color.fromRGBO(230, 230, 230, 1),),
                                       child: const Icon(Icons.people_alt_rounded, size: 25, color: Colors.black),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.5,
                                       child: Text("Мій профіль", style: GoogleFonts.rubik(
                                               textStyle: const TextStyle(
@@ -270,7 +270,7 @@ class ProfilePage extends StatefulWidget{
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500
                                               )))),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.1,
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),
@@ -292,7 +292,7 @@ class ProfilePage extends StatefulWidget{
                                                                 color: Color.fromRGBO(230, 230, 230, 1),),
                                           child: const Icon(Icons.info_outline_rounded, size: 25, color: Colors.black),
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context).size.width*0.5,
                                           child: Text("Інформація про нас", style: GoogleFonts.rubik(
                                                   textStyle: const TextStyle(
@@ -300,7 +300,7 @@ class ProfilePage extends StatefulWidget{
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w500
                                                   )))),
-                                        Container(
+                                        SizedBox(
                                           width: MediaQuery.of(context).size.width*0.1,
                                           child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                         ),
@@ -316,7 +316,7 @@ class ProfilePage extends StatefulWidget{
                                                             color: Color.fromRGBO(230, 230, 230, 1),),
                                       child: const Icon(Icons.logout_rounded, size: 25, color: Colors.black),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.5,
                                       child: Text("Вихід", style: GoogleFonts.rubik(
                                               textStyle: const TextStyle(
@@ -324,7 +324,7 @@ class ProfilePage extends StatefulWidget{
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500
                                               )))),
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width*0.1,
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),

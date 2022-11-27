@@ -26,6 +26,7 @@ enum SocialLoginButtonType {
   appleBlack
 }
 
+// ignore: must_be_immutable
 class SocialLoginButton extends StatelessWidget {
   SocialLoginButton({
     Key? key,
@@ -50,16 +51,16 @@ class SocialLoginButton extends StatelessWidget {
 
     switch (buttonType) {
       case SocialLoginButtonType.facebook:
-        imageName = _defaultImagePath + "facebook-logo.png";
+        imageName = "${_defaultImagePath}facebook-logo.png";
         break;
       case SocialLoginButtonType.google:
-        imageName = _defaultImagePath + "google-logo.png";
+        imageName = "${_defaultImagePath}google-logo.png";
         break;
       case SocialLoginButtonType.apple:
-        imageName = _defaultImagePath + "apple-logo.png";
+        imageName = "${_defaultImagePath}apple-logo.png";
         break;
       case SocialLoginButtonType.appleBlack:
-        imageName = _defaultImagePath + "apple-black-logo.png";
+        imageName = "${_defaultImagePath}apple-black-logo.png";
         break;
     }
   

@@ -21,7 +21,7 @@ class _LoginState extends State<LoginPage> {
   var currentFocus;
   // ignore: prefer_final_fields
   var _text = '';
-  bool _submitted = false;
+  final bool _submitted = false;
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
