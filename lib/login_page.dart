@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginState extends State<LoginPage> {
 
-  Color mainColor = const Color.fromRGBO(255, 105, 49, 1);
+  Color mainColor = const Color.fromRGBO(254, 182, 102, 1);
   Color additionalColor = const Color.fromRGBO(40, 40, 40, 1);
 
   // ignore: prefer_typing_uninitialized_variables
@@ -27,7 +27,7 @@ class _LoginState extends State<LoginPage> {
   var _text = '';
   final bool _submitted = false;
 
-  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   
 
@@ -67,14 +67,14 @@ class _LoginState extends State<LoginPage> {
                             alignment: Alignment.topCenter,
                             child: TextField(
                               onChanged: (text) => setState(() => _text),
-                              controller: phoneNumberController,
+                              controller: emailController,
                               obscureText: false,
                               textAlign: TextAlign.left,
                               cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                               textAlignVertical: TextAlignVertical.bottom,
                               decoration: InputDecoration(
                                 errorText: _submitted
-                                    ? errorText(phoneNumberController)
+                                    ? errorText(emailController)
                                     : null,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide:
@@ -85,7 +85,7 @@ class _LoginState extends State<LoginPage> {
                                 border: UnderlineInputBorder(
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
-                                labelText: 'Введіть номер телефону',
+                                labelText: 'Введіть пошту',
                                 labelStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
@@ -190,27 +190,20 @@ class _LoginState extends State<LoginPage> {
 
 
 void buttonAction(){
-   if (phoneNumberController.value.text.isNotEmpty) {
-    if(isValidPhoneNumber(phoneNumberController.value.text)){
+   if (emailController.value.text.isNotEmpty) {
       if (passwordController.value.text.isNotEmpty) {
-        loginUser(phoneNumberController.text, passwordController.text).then((value){
-          bool result = value;
+          bool result = loginUser(emailController.text, passwordController.text);
           if (result == true) {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const MainScreen()));
-              _setLogin(true);
-              } 
+            Navigator.push(context,  MaterialPageRoute(builder: (context)=> const MainScreen()));
+            _setLogin(true);
+          } 
           else {
-            FtoastController.showToast(context, "Неправильний пароль");
+            FtoastController.showToast(context, "Помилка входу");
+          }  
           }
-        });    
-        }
         else{
           FtoastController.showToast(context, "Введіть пароль");
         }
-    }
-    else{
-      FtoastController.showToast(context, "Неправильний номер");
-     }
     }
     else{
       FtoastController.showToast(context, "Введіть номер телефону");
@@ -223,8 +216,6 @@ void buttonAction(){
       prefs.setBool('login', login);
     });
   }
-
-  bool isValidPhoneNumber(String? value) => RegExp(r'(^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$)').hasMatch(value ?? '');
 
 }
 

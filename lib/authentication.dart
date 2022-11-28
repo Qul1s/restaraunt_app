@@ -5,39 +5,94 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-Future<bool> loginUser(number, password) async{
-  bool result = false;
-  final users = await FirebaseDatabase.instance.ref('Users/$number').get();
-  String passwordFromDB = users.child("password").value.toString();
-  List<int> bytes = utf8.encode(password);
-  password = sha256.convert(bytes).toString();
-    if (passwordFromDB == password){
-    result = true;
-     }
-    else{
-      result = false;
+class AuthenticationServices {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+  Future createNewUser(String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    String mail =  prefs.getString('mail').toString();
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: mail, password: password);
+      User? user = result.user;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId', user!.uid);
+      return user;
+    } catch (e) {
+      print(e.toString());
     }
-    return result;
+  }
+
+
+  Future loginUser(String mail, String password) async {
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: mail, password: password);
+      User? user = result.user;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId', user!.uid);
+      return user;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
 
-Future<String> getDataFromDB(number) async{
-  String passwordFromDB = '';
-  final users = await FirebaseDatabase.instance.ref('Users/$number').get();
-  passwordFromDB = users.child("password").value.toString();
-  return passwordFromDB.toString();
+  bool createUser(password) {
+  AuthenticationServices _auth = AuthenticationServices();
+  dynamic result = _auth.createNewUser(password);
+  if (result == null) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
-Future<void> setUserData(String name, String surname, String age, String image) async {
-  String userId = '';
+bool loginUser(mail, password){
+  AuthenticationServices _auth = AuthenticationServices();
+  dynamic result = _auth.loginUser(mail, password);
+  if (result == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+Future<void> setMail(mail) async {
   final prefs = await SharedPreferences.getInstance();
-  userId = (prefs.getString('userId') ?? '');
+  prefs.setString('mail', mail);
+}
+
+
+void setPhoneNumber(String phoneNumber) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+  final usersQuery = FirebaseDatabase.instance.ref('Users/$userId');
+   await usersQuery.set({
+                          "phoneNumber": phoneNumber,
+                           });
+}
+
+
+
+void setName(name) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
   final usersQuery = FirebaseDatabase.instance.ref('Users/$userId');
    await usersQuery.update({
-                          "Image": image,
-                           "Name": name,
-                           "Surname": surname,
-                            "Age": age,
+                          "name": name,
                            });
-
 }
+
+void setAge(age) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+  final usersQuery = FirebaseDatabase.instance.ref('Users/$userId');
+   await usersQuery.update({
+                          "age": age,
+                           });
+}
+
+    
+
 

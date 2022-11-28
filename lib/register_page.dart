@@ -1,8 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:im_stepper/stepper.dart';
-import 'firebase_controller.dart';
+import 'package:restaraunt_app/authentication.dart';
+import 'package:restaraunt_app/mailer.dart';
+import 'package:restaraunt_app/main_screen.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'error_text.dart';
 import 'ftoast_controller.dart';
+import 'login_page.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -30,8 +38,9 @@ class _RegisterState extends State<RegisterPage> {
   var secondText ='';
   int activeStep = 0;
   bool mail = false;
+  
+  DateTime _selectedDate = DateTime.now();
 
-  FirebaseController firebaseController = FirebaseController();
 
   unfocus() {
     currentFocus = FocusScope.of(context);
@@ -64,26 +73,7 @@ class _RegisterState extends State<RegisterPage> {
                     Container(
                       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15),
                       child: DotStepper(
-                            // numbers: const[
-                            //     1,
-                            //     2,
-                            //     3,
-                            //     4,
-                            // ],
-                            // enableNextPreviousButtons: false,
-                            // enableStepTapping: false,
-                            // stepColor: additionalColor,
-                            // numberStyle: TextStyle(color: additionalColor),
-                            // activeStepColor: mainColor,
-                            // activeStepBorderColor: mainColor,
-                            // activeStepBorderPadding: 0,
-                            // lineColor: additionalColor,
-                            // lineLength: MediaQuery.of(context).size.width*0.1,
-                            // lineDotRadius: 1,
-                            // stepRadius: MediaQuery.of(context).size.width*0.05,
-                            // stepReachedAnimationEffect: Curves.easeIn,
-                            // stepReachedAnimationDuration: const Duration(seconds: 10),
-                            dotCount: 4,
+                            dotCount: 6,
                             dotRadius: MediaQuery.of(context).size.width * 0.03,
                             shape: Shape.circle,
                             spacing: MediaQuery.of(context).size.width * 0.1,        
@@ -131,39 +121,87 @@ class _RegisterState extends State<RegisterPage> {
     ));
   }
 
-  void buttonAction(){
-    if(emailController.value.text.isEmpty){
-      FtoastController.showToast(context, "Заповніть поле");     
-    }
-    else{
-      switch(activeStep){
-      case 0:
-        mail = firebaseController.setMailOrPhone(emailController.value.text);
-        break;
-      case 1:
-        firebaseController.register(emailController.value.text, passwordController.value.text, mail);
-        break;
-      case 2:
-        firebaseController.setName(emailController.value.text);
-        break;
-      case 3:
-        firebaseController.setAge(emailController.value.text);
-        break;
-    }
+    bool isValidPhoneNumber(String? value) => RegExp(r'(^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$)').hasMatch(value ?? '');
+  
+    void nextStep(){
     setState(() {
       emailController.clear();
-      if(activeStep != 3){
+      if(activeStep != 5){
         activeStep += 1; 
         }
       else{
-        activeStep = 0;
+        Navigator.push(context,  MaterialPageRoute(builder: (context)=> const MainScreen()));
         }
      });
     }
-   
+
+  int code = 1;
+
+  void buttonAction(){
+    if(!emailController.value.text.isEmpty || _selectedDate != DateTime.now()){
+      switch(activeStep){
+      case 0:
+        setMail(emailController.value.text);
+        Random rnd = Random();
+        setState(() {
+          code = rnd.nextInt(10000);
+        });
+        sendToMail(emailController.value.text, code);
+        nextStep();
+        break;
+      case 1:
+        if(code == int.parse(emailController.value.text)){
+          nextStep();
+        }
+        else{
+           FtoastController.showToast(context, "Неправильний код");
+        }
+        break;
+      case 2:
+        if(emailController.value.text == passwordController.value.text){
+            bool result = createUser(emailController.text);
+            if (result == true) {
+              nextStep();
+            } 
+            else {
+              FtoastController.showToast(context, "Сталася помилка, спробуйте ще"); 
+            }  
+          }
+          else{
+            FtoastController.showToast(context, "Паролі не збігаються");  
+          } 
+          break;
+      case 3:
+         if(isValidPhoneNumber(emailController.value.text)){
+          setPhoneNumber(emailController.value.text);
+          nextStep();
+        }
+        else{
+          FtoastController.showToast(context, "Неправильний номер");  
+        } 
+        break;
+      case 4:
+          setName(emailController.value.text);
+          nextStep();
+        break;
+      case 5:
+        if(_selectedDate.isBefore(DateTime.now()) && _selectedDate.isAfter(DateTime(1900))){
+          setAge(_selectedDate.toString());
+          nextStep();
+        }
+        else{
+          FtoastController.showToast(context, "Неправильна дата");  
+        } 
+        break; 
+    }
+    }
+    else{
+       FtoastController.showToast(context, "Заповніть поле"); 
+    }
   }
 
   
+
 
   Widget textFieldRegister(int index){
     switch(index){
@@ -191,7 +229,7 @@ class _RegisterState extends State<RegisterPage> {
                                 border: UnderlineInputBorder(
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
-                                labelText: "Введіть пошту або номер телефону",
+                                labelText: "Введіть пошту",
                                 labelStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
@@ -204,7 +242,44 @@ class _RegisterState extends State<RegisterPage> {
                                   fontFamily: "uaBrand",
                                   fontWeight: FontWeight.w400),
                             ));
-      case 1: return Column(mainAxisAlignment: MainAxisAlignment.start,
+      case 1: return Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
+                            alignment: Alignment.topCenter,
+                            child: TextField(
+                              onChanged: (text) => setState(() => _text),
+                              controller: emailController,
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
+                              textAlignVertical: TextAlignVertical.bottom,
+                              decoration: InputDecoration(
+                                errorText: _submitted
+                                    ? errorText(emailController)
+                                    : null,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                border: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                labelText: "Введіть код, відправлений на пошту",
+                                labelStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                    fontFamily: "uaBrand",
+                                  fontWeight: FontWeight.w400),
+                              ),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: additionalColor,
+                                  fontFamily: "uaBrand",
+                                  fontWeight: FontWeight.w400),
+                            ));
+      case 2: return Column(mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
         Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -213,7 +288,7 @@ class _RegisterState extends State<RegisterPage> {
                             child: TextField(
                               onChanged: (text) => setState(() => _text),
                               controller: emailController,
-                              obscureText: false,
+                              obscureText: true,
                               textAlign: TextAlign.left,
                               cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                               textAlignVertical: TextAlignVertical.bottom,
@@ -250,7 +325,7 @@ class _RegisterState extends State<RegisterPage> {
                             child: TextField(
                               onChanged: (text) => setState(() => secondText),
                               controller: passwordController,
-                              obscureText: false,
+                              obscureText: true,
                               textAlign: TextAlign.left,
                               cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                               textAlignVertical: TextAlignVertical.bottom,
@@ -279,8 +354,45 @@ class _RegisterState extends State<RegisterPage> {
                                   color: additionalColor,
                                   fontFamily: "uaBrand",
                                   fontWeight: FontWeight.w400),
-                            ))]);                    
-      case 2: return Container(
+                            ))]);  
+      case 3: return Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
+                            alignment: Alignment.topCenter,
+                            child: TextField(
+                              onChanged: (text) => setState(() => _text),
+                              controller: emailController,
+                              obscureText: false,
+                              textAlign: TextAlign.left,
+                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
+                              textAlignVertical: TextAlignVertical.bottom,
+                              decoration: InputDecoration(
+                                errorText: _submitted
+                                    ? errorText(emailController)
+                                    : null,
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                border: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: additionalColor, width: 3)),
+                                labelText: "Введіть номер телефону",
+                                labelStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                    fontFamily: "uaBrand",
+                                  fontWeight: FontWeight.w400),
+                              ),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: additionalColor,
+                                  fontFamily: "uaBrand",
+                                  fontWeight: FontWeight.w400),
+                            ));                 
+      case 4: return Container(
                             height: MediaQuery.of(context).size.height * 0.1,
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
                             alignment: Alignment.topCenter,
@@ -318,43 +430,35 @@ class _RegisterState extends State<RegisterPage> {
                                   fontWeight: FontWeight.w400),
                             ));
       
-      case 3: return Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
+      case 5: return Container(
+                            height: MediaQuery.of(context).size.height * 0.17,
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
                             alignment: Alignment.topCenter,
-                            child: TextField(
-                              onChanged: (text) => setState(() => _text),
-                              controller: emailController,
-                              obscureText: false,
-                              textAlign: TextAlign.left,
-                              cursorColor: const Color.fromRGBO(40, 40, 40, 1),
-                              textAlignVertical: TextAlignVertical.bottom,
-                              decoration: InputDecoration(
-                                errorText: _submitted
-                                    ? errorText(emailController)
-                                    : null,
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: additionalColor, width: 3)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: additionalColor, width: 3)),
-                                border: UnderlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: additionalColor, width: 3)),
-                                labelText: "Введіть вашу дату народження",
-                                labelStyle: TextStyle(
-                                    fontSize: 16,
-                                    color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
-                              ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
-                            ));
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text("Введіть дату народження",style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400
+                                    ),
+                                  )),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
+                            alignment: Alignment.topCenter,
+                            child: ScrollDatePicker(
+                                selectedDate: _selectedDate,
+                                locale: const Locale('en'),
+                                onDateTimeChanged: (DateTime value) {
+                                  setState(() {
+                                    _selectedDate = value;
+                                  });
+                                },
+                            ))
+                            ]));
       default: return Container(
                             height: MediaQuery.of(context).size.height * 0.1,
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
