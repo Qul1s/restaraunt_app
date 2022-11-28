@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ftoast/ftoast.dart';
 import 'package:fsuper/fsuper.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FtoastController{
 
@@ -14,10 +15,11 @@ class FtoastController{
             textAlignment: Alignment.center,
             textAlign: TextAlign.left,
             text: text,
-            style: const TextStyle(color:Colors.black, 
-                                  fontFamily: "uaBrand", 
-                                  fontSize: 20, 
-                                  fontWeight: FontWeight.normal,),
+            style: GoogleFonts.poiretOne(
+                                    textStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800)),
             backgroundColor: const Color.fromRGBO(255, 255, 255, 0),
             child2: Container(
               decoration: const BoxDecoration(shape: BoxShape.circle, color:Color.fromRGBO(255, 0, 0, 0.3),),
@@ -25,7 +27,7 @@ class FtoastController{
               width: MediaQuery.of(context).size.width * 0.06,
               alignment: Alignment.center,
               child: const Icon(Icons.close_sharp, color: Colors.white, size:15)),
-            child2Margin: EdgeInsets.only(left: MediaQuery.of(context).size.height * 0.027),
+            child2Margin: EdgeInsets.only(left: MediaQuery.of(context).size.height * 0.015),
             child2Alignment: Alignment.centerLeft,
             cornerStyle: FCornerStyle.round,
             corner: FCorner.all(25),

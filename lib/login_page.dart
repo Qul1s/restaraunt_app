@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:restaraunt_app/ftoast_controller.dart';
+import 'package:restaraunt_app/main_screen.dart';
 import 'package:restaraunt_app/register_page.dart';
 import 'package:restaraunt_app/social_login_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'authentication.dart';
 import 'error_text.dart';
 
 
@@ -23,7 +27,7 @@ class _LoginState extends State<LoginPage> {
   var _text = '';
   final bool _submitted = false;
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   
 
@@ -63,14 +67,14 @@ class _LoginState extends State<LoginPage> {
                             alignment: Alignment.topCenter,
                             child: TextField(
                               onChanged: (text) => setState(() => _text),
-                              controller: emailController,
+                              controller: phoneNumberController,
                               obscureText: false,
                               textAlign: TextAlign.left,
                               cursorColor: const Color.fromRGBO(40, 40, 40, 1),
                               textAlignVertical: TextAlignVertical.bottom,
                               decoration: InputDecoration(
                                 errorText: _submitted
-                                    ? errorText(emailController)
+                                    ? errorText(phoneNumberController)
                                     : null,
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide:
@@ -81,7 +85,7 @@ class _LoginState extends State<LoginPage> {
                                 border: UnderlineInputBorder(
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
-                                labelText: 'Введіть пошту або номер телефону',
+                                labelText: 'Введіть номер телефону',
                                 labelStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
@@ -153,7 +157,7 @@ class _LoginState extends State<LoginPage> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                               color: Colors.white,
-                                              fontSize: 24,
+                                              fontSize: 22,
                                               fontFamily: "uaBrand",
                                               fontWeight: FontWeight.w400
                                               )),  
@@ -186,6 +190,41 @@ class _LoginState extends State<LoginPage> {
 
 
 void buttonAction(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> const RegisterPage()));
+   if (phoneNumberController.value.text.isNotEmpty) {
+    if(isValidPhoneNumber(phoneNumberController.value.text)){
+      if (passwordController.value.text.isNotEmpty) {
+        loginUser(phoneNumberController.text, passwordController.text).then((value){
+          bool result = value;
+          if (result == true) {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const MainScreen()));
+              _setLogin(true);
+              } 
+          else {
+            FtoastController.showToast(context, "Неправильний пароль");
+          }
+        });    
+        }
+        else{
+          FtoastController.showToast(context, "Введіть пароль");
+        }
+    }
+    else{
+      FtoastController.showToast(context, "Неправильний номер");
+     }
+    }
+    else{
+      FtoastController.showToast(context, "Введіть номер телефону");
+     }
   }
+
+ void _setLogin(bool login) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('login', login);
+    });
+  }
+
+  bool isValidPhoneNumber(String? value) => RegExp(r'(^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$)').hasMatch(value ?? '');
+
 }
+
