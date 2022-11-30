@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:im_stepper/stepper.dart';
 import 'package:restaraunt_app/authentication.dart';
@@ -10,7 +8,6 @@ import 'package:restaraunt_app/main_screen.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'error_text.dart';
 import 'ftoast_controller.dart';
-import 'login_page.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -138,7 +135,7 @@ class _RegisterState extends State<RegisterPage> {
   int code = 1;
 
   void buttonAction(){
-    if(!emailController.value.text.isEmpty || _selectedDate != DateTime.now()){
+    if(emailController.value.text.isNotEmpty || _selectedDate != DateTime.now()){
       switch(activeStep){
       case 0:
         setMail(emailController.value.text);

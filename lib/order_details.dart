@@ -1,47 +1,60 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:blur/blur.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'order.dart';
 
  // ignore: must_be_immutable
  class OrderDetailsPage extends StatefulWidget {
-    ReadyOrder readyOrder;
+    int index;
      OrderDetailsPage({Key? key, 
-      required this.readyOrder
+      required this.index
     }) : super(key: key);
 
     @override
     // ignore: no_logic_in_create_state
-    State<OrderDetailsPage> createState() => _OrderDetailsPageState(readyOrder: readyOrder);
+    State<OrderDetailsPage> createState() => _OrderDetailsPageState(index: index);
   }
 
   class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
     _OrderDetailsPageState({
-      required this.readyOrder
+      required this.index
     });
        
     Color additionalColor = const Color.fromRGBO(248, 248, 248, 1);
     Color textColor = const Color.fromRGBO(68, 68,68, 1);
-    ReadyOrder readyOrder;
+    int index;
 
     ScrollController _controller = ScrollController();
 
-
+    dynamic order ='';
+    dynamic dishesQuery;
     @override
-    void initState() {
-      super.initState();
-      _controller = ScrollController();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-          _controller.animateTo(
-            _controller.position.maxScrollExtent,
-            duration: const Duration(seconds: 1),
-            curve: Curves.fastOutSlowIn,
-    );
-});
+    void initState(){
+      getData();
+      super.initState();    
+  }
+
+  void getData() async{
+      final ref = FirebaseDatabase.instance.ref('Orders/${index+1}');
+
+      Stream<DatabaseEvent> stream = ref.onValue;
+      stream.listen((DatabaseEvent event) {
+        setState(() {
+          order = jsonDecode(jsonEncode(event.snapshot.value)) as Map<String, dynamic>;
+        });
+      });
+
+      setState(() {
+        dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
+    });
   }
 
        
@@ -72,14 +85,15 @@ import 'order.dart';
                                                     top: MediaQuery.of(context).size.height* 0.02),
                             width: MediaQuery.of(context).size.width* 0.5,
                             height: MediaQuery.of(context).size.height* 0.04,
-                            child: AutoSizeText("Замовлення №${readyOrder.number}", 
+                            child: AutoSizeText("Замовлення №${order["number"]}", 
                               stepGranularity: 1,
                               minFontSize: 12,
                               style: GoogleFonts.montserrat(
                                     textStyle: const TextStyle(
                                     color: Color.fromRGBO(31, 31, 47, 1),
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w500)))),
+                                    fontWeight: FontWeight.w500)))
+                                    ),
                           GestureDetector(
                             onTap:() {
                               Navigator.pop(context);
@@ -108,11 +122,18 @@ import 'order.dart';
                           SizedBox(
                               height: MediaQuery.of(context).size.height*0.43,
                               width: MediaQuery.of(context).size.width* 0.9,
-                              child: ListView.separated(
+                              child: FirebaseDatabaseQueryBuilder(
+                                  query: dishesQuery,
+                                  builder: (context, snapshot, _) { 
+                                  return ListView.separated(
                                       shrinkWrap: false,
-                                      itemCount: readyOrder.dishOrder.length,
-                                      separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.015),
-                                      itemBuilder: (BuildContext context, int index){
+                                      itemCount: snapshot.docs.length,
+                                      separatorBuilder: (BuildContext context, int secondIndex) => SizedBox(height: MediaQuery.of(context).size.height* 0.015),
+                                      itemBuilder: (BuildContext context, int secondIndex){
+                                          if (snapshot.hasMore && secondIndex + 1 == snapshot.docs.length) {
+                                                 snapshot.fetchMore();
+                                                } 
+                                          final dishes = jsonDecode(jsonEncode(snapshot.docs[secondIndex].value)) as Map<String, dynamic>;
                                           return  Container(
                                             height: MediaQuery.of(context).size.height* 0.12,
                                             decoration: const BoxDecoration(
@@ -129,15 +150,16 @@ import 'order.dart';
                                                   height: MediaQuery.of(context).size.height* 0.12,
                                                   alignment: Alignment.center,
                                                   child: Image.asset(
+                                                          dishes["image"],
                                                           width: MediaQuery.of(context).size.height* 0.12,
                                                           height: MediaQuery.of(context).size.height* 0.12,
-                                                          readyOrder.dishOrder[index].image,
-                                                          fit: BoxFit.fill)),
+                                                          fit: BoxFit.fill)
+                                                          ),
                                                 Column(
                                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
-                                                          Text(readyOrder.dishOrder[index].name,
+                                                          Text(dishes["name"],
                                                               style: GoogleFonts.poiretOne(
                                                                           textStyle: const TextStyle(
                                                                           color: Color.fromRGBO(31, 31, 47, 1),
@@ -160,14 +182,14 @@ import 'order.dart';
                                                                         color: Color.fromRGBO(254, 182, 102, 1),
                                                                         fontSize: 18,
                                                                         fontWeight: FontWeight.w700)),
-                                                                      TextSpan(text: " ${readyOrder.dishOrder[index].price*readyOrder.dishOrder[index].count}",                                                                  
+                                                                      TextSpan(text: " ${dishes["price"]*dishes["count"]}",                                                                  
                                                                           style: GoogleFonts.nunito(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(31, 31, 47, 1),
                                                                             fontSize: 20,
                                                                             fontWeight: FontWeight.w600))),
                                                                     ],)),
-                                                                Text("x${readyOrder.dishOrder[index].count}",
+                                                                Text("x${dishes["count"]}",
                                                                   style: GoogleFonts.nunito(
                                                                               textStyle: const TextStyle(
                                                                               color: Color.fromRGBO(31, 31, 47, 1),
@@ -179,7 +201,7 @@ import 'order.dart';
                                             ]),
                                           );
                                 },
-                              )
+                              );})
                         ),
                         Container( 
                           padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.01,
@@ -209,7 +231,7 @@ import 'order.dart';
                                           color: Color.fromRGBO(31, 31, 47, 1),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700))),     
-                                    Text("${readyOrder.price}₴", 
+                                    Text("${order["price"]}₴", 
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.montserrat(
                                           textStyle: const TextStyle(
@@ -228,7 +250,7 @@ import 'order.dart';
                                           color: Color.fromRGBO(31, 31, 47, 1),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700))),     
-                                    Text(readyOrder.address, 
+                                    Text(order["address"], 
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.montserrat(
                                           textStyle: const TextStyle(
@@ -247,7 +269,7 @@ import 'order.dart';
                                           color: Color.fromRGBO(31, 31, 47, 1),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700))),     
-                                    Text(readyOrder.date, 
+                                    Text(order["date"], 
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.montserrat(
                                           textStyle: const TextStyle(
@@ -263,9 +285,17 @@ import 'order.dart';
     }
 
     Widget statusOfProcessing(){
-      if(readyOrder.status == "В процесі" || readyOrder.status == "Виконаний"){
-      switch(readyOrder.statufOfProcessing){
-        case 1: return  Container( 
+      if(order["status"] == "В процесі" || order["status"] == "Виконаний"){
+      switch(order["statusOfProcessing"]){
+        case 1:       _controller = ScrollController();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _controller.animateTo(
+            _controller.position.maxScrollExtent,
+            duration: const Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+          );
+      });
+      return  Container( 
               decoration: const BoxDecoration(color: Colors.red,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30),
                                                                             topRight: Radius.circular(30))), 
@@ -488,7 +518,15 @@ import 'order.dart';
                   ])),
                 ])])
             )));
-        case 2: return 
+        case 2:    _controller = ScrollController();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _controller.animateTo(
+            _controller.position.maxScrollExtent,
+            duration: const Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+          );
+      });
+      return 
               SizedBox( 
               height: MediaQuery.of(context).size.height*0.35,
               child: SingleChildScrollView(
@@ -672,7 +710,15 @@ import 'order.dart';
                   ],)),
                 ])])
             )));
-        case 3: return 
+        case 3:  _controller = ScrollController();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _controller.animateTo(
+            (_controller.position.maxScrollExtent+_controller.position.minScrollExtent)/2,
+            duration: const Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+          );
+      });
+      return 
               SizedBox( 
               height: MediaQuery.of(context).size.height*0.35,
               child: SingleChildScrollView(

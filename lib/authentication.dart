@@ -1,5 +1,6 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
+
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,8 +39,8 @@ class AuthenticationServices {
 }
 
   bool createUser(password) {
-  AuthenticationServices _auth = AuthenticationServices();
-  dynamic result = _auth.createNewUser(password);
+  AuthenticationServices auth = AuthenticationServices();
+  dynamic result = auth.createNewUser(password);
   if (result == null) {
     return false;
   } else {
@@ -48,8 +49,8 @@ class AuthenticationServices {
 }
 
 bool loginUser(mail, password){
-  AuthenticationServices _auth = AuthenticationServices();
-  dynamic result = _auth.loginUser(mail, password);
+  AuthenticationServices auth = AuthenticationServices();
+  dynamic result = auth.loginUser(mail, password);
   if (result == null) {
     return false;
   } else {

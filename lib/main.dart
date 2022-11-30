@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaraunt_app/login_page.dart';
 import 'package:restaraunt_app/main_screen.dart';
 import 'package:restaraunt_app/register_page.dart';
 import 'firebase_options.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RegisterPage(),
+      home: MainScreen(),
     );
   }
 }

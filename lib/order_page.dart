@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
+import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
@@ -84,6 +88,7 @@ import 'register_page.dart';
                                                         ]))
           ));}
           else{
+            final ordersQuery = FirebaseDatabase.instance.ref('Orders');
             return Container(
                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.05),
                     height: MediaQuery.of(context).size.height*0.927,
@@ -136,12 +141,20 @@ import 'register_page.dart';
                         Expanded(child: Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           width: MediaQuery.of(context).size.width*0.9,
-                          child: ListView.separated(
+                          child: FirebaseDatabaseQueryBuilder(
+                                  query: ordersQuery,
+                                  builder: (context, snapshot, _) { 
+                                  return ListView.separated(
                             clipBehavior: Clip.antiAlias,
-                            itemCount: ReadyOrderList.readyOrder.length,
+                            itemCount: snapshot.docs.length,
                             separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.02),
                             shrinkWrap: true,
                               itemBuilder: (BuildContext context, int index){
+                                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                  snapshot.fetchMore();
+                                  } 
+                                final order = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
+                                var dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
                                 return SwipeActionCell(
                                             backgroundColor: const Color.fromRGBO(252, 252, 252, 1),
                                             key: ObjectKey(ReadyOrderList.readyOrder[index]), 
@@ -161,7 +174,7 @@ import 'register_page.dart';
                                         ],
                                         child:GestureDetector( 
                                           onTap: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderDetailsPage(readyOrder: ReadyOrderList.readyOrder[index])));
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderDetailsPage(index: index)));
                                           },
                                     child: Container(
                                     padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,
@@ -179,7 +192,7 @@ import 'register_page.dart';
                                       Container(
                                         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.01),
                                         width: MediaQuery.of(context).size.width*0.8,
-                                        child: Text("Замовлення №${ReadyOrderList.readyOrder[index].number}",
+                                        child: Text("Замовлення №${order["number"]}",
                                                 style: GoogleFonts.poiretOne(
                                                                             textStyle: TextStyle(
                                                                             color: textColor,
@@ -188,23 +201,31 @@ import 'register_page.dart';
                                         Container(
                                         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.005),
                                         width: MediaQuery.of(context).size.width*0.8,
-                                        child: Text("${ReadyOrderList.readyOrder[index].date}, ${ReadyOrderList.readyOrder[index].time}",
+                                        child: Text("${order["date"]}, ${order["time"]}",
                                                 style: GoogleFonts.poiretOne(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(100, 100, 100, 1),
                                                                             fontSize: 16,
                                                                             fontWeight: FontWeight.w600)))),
+                                      
                                       Expanded(child: 
                                        Container(
                                         alignment: Alignment.center,
-                                        child: ListView.separated(
+                                        child: FirebaseDatabaseQueryBuilder(
+                                        query: dishesQuery,
+                                        builder: (context, snapshot, _) { 
+                                  return ListView.separated(
                                           separatorBuilder: (context, index) {
                                             return const Divider();
                                           },
                                           physics: const NeverScrollableScrollPhysics(),
-                                          itemCount: ReadyOrderList.readyOrder[index].dishOrder.length,
+                                          itemCount: snapshot.docs.length,
                                           shrinkWrap: true,
                                             itemBuilder: (BuildContext context, int secondIndex){
+                                                if (snapshot.hasMore && secondIndex + 1 == snapshot.docs.length) {
+                                                 snapshot.fetchMore();
+                                                } 
+                                              final dishes = jsonDecode(jsonEncode(snapshot.docs[secondIndex].value)) as Map<String, dynamic>;
                                               return Container(
                                                 decoration: const BoxDecoration(
                                                 color: Color.fromRGBO(255, 255, 255, 1),
@@ -219,9 +240,9 @@ import 'register_page.dart';
                                                     height: MediaQuery.of(context).size.width* 0.25,
                                                     alignment: Alignment.center,
                                                     child: Image.asset(
+                                                            dishes["image"],
                                                             width: MediaQuery.of(context).size.width* 0.32,
                                                             height: MediaQuery.of(context).size.width* 0.32,
-                                                            ReadyOrderList.readyOrder[index].dishOrder[secondIndex].image,
                                                             fit: BoxFit.fill)),
                                                   Column(
                                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -230,7 +251,7 @@ import 'register_page.dart';
                                                             Container(
                                                               width: MediaQuery.of(context).size.width* 0.52,
                                                               padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05),
-                                                              child: Text(ReadyOrderList.readyOrder[index].dishOrder[secondIndex].name,
+                                                              child: Text(dishes["name"],
                                                                 style: GoogleFonts.poiretOne(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(31, 31, 47, 1),
@@ -252,14 +273,14 @@ import 'register_page.dart';
                                                                             color: Color.fromRGBO(254, 182, 102, 1),
                                                                             fontSize: 17,
                                                                             fontWeight: FontWeight.w800))                                                                 ),
-                                                                      TextSpan(text: " ${ReadyOrderList.readyOrder[index].dishOrder[secondIndex].price*ReadyOrderList.readyOrder[index].dishOrder[secondIndex].count}",                                                                  
+                                                                      TextSpan(text: " ${dishes["price"]*dishes["count"]}",                                                                  
                                                                           style: GoogleFonts.nunito(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(31, 31, 47, 1),
                                                                             fontSize: 20,
                                                                             fontWeight: FontWeight.w600))),
                                                                     ],)),
-                                                                  Text("Кількість: ${ReadyOrderList.readyOrder[index].dishOrder[secondIndex].count}",
+                                                                  Text("Кількість: ${dishes["count"]}",
                                                                       style: GoogleFonts.poiretOne(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(31, 31, 47, 1),
@@ -268,21 +289,21 @@ import 'register_page.dart';
                                                             ],)),
                                                           ],),
                                               ]),
-                                            );})),
+                                            );});})),
                                     ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Text(" ${ReadyOrderList.readyOrder[index].price} ₴",
+                                      Text(" ${order["price"]} ₴",
                                                 textAlign: TextAlign.right,
                                                 style: GoogleFonts.nunito(
                                                                             textStyle: const TextStyle(
                                                                             color: Color.fromRGBO(31, 31, 47, 1),
                                                                             fontSize: 25,
                                                                             fontWeight: FontWeight.w800))),
-                                  statusContainer(ReadyOrderList.readyOrder[index].status)
-                                  ],)]))));})))]));                          
+                                  statusContainer(order["status"])
+                                  ],)]))));});})))]));                          
           }
   }
 

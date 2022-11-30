@@ -312,13 +312,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
-  flutter_sms:
-    dependency: "direct main"
-    description:
-      name: flutter_sms
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.3"
   flutter_svg:
     dependency: transitive
     description:
@@ -839,7 +832,7 @@ packages:
     source: hosted
     version: "0.3.1"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"

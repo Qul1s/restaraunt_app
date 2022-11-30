@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaraunt_app/ftoast_controller.dart';
 import 'package:restaraunt_app/main_screen.dart';
-import 'package:restaraunt_app/register_page.dart';
 import 'package:restaraunt_app/social_login_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

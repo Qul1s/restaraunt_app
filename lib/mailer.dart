@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 
@@ -9,6 +11,7 @@ void sendToMail(String mail, int code) async {
   String username = 'inaverifservices@gmail.com';
   String password = 'sjsiobmtrfuidljn';
 
+  // ignore: deprecated_member_use
   final smtpServer = gmail(username, password);
   // Use the SmtpServer class to configure an SMTP server:
   // final smtpServer = SmtpServer('smtp.domain.com');
@@ -17,14 +20,14 @@ void sendToMail(String mail, int code) async {
 
   // Create our message.
   final message = Message()
-    ..from = Address(username, 'Pizza-pub')
+    ..from = Address(username, 'Pizza Pub')
     ..recipients.add(mail)
-    ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
-    ..text = 'Verification code for Pizza-pub $code';
+    ..subject = 'Verification code 😀'
+    ..text = 'Verification code for Pizza Pub: $code';
 
   try {
     final sendReport = await send(message, smtpServer);
-    print('Message sent: ' + sendReport.toString());
+    print('Message sent: $sendReport');
   } on MailerException catch (e) {
     print('Message not sent.');
     for (var p in e.problems) {
