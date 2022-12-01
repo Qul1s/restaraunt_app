@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:blur/blur.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'order.dart';
 
  // ignore: must_be_immutable
  class OrderDetailsPage extends StatefulWidget {
@@ -710,16 +708,7 @@ import 'order.dart';
                   ],)),
                 ])])
             )));
-        case 3:  _controller = ScrollController();
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _controller.animateTo(
-            (_controller.position.maxScrollExtent+_controller.position.minScrollExtent)/2,
-            duration: const Duration(seconds: 1),
-            curve: Curves.fastOutSlowIn,
-          );
-      });
-      return 
-              SizedBox( 
+        case 3:   return SizedBox( 
               height: MediaQuery.of(context).size.height*0.35,
               child: SingleChildScrollView(
                 child: 

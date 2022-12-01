@@ -58,6 +58,10 @@ bool loginUser(mail, password){
   }
 }
 
+void resetPassword(mail) async{
+  await FirebaseAuth.instance.sendPasswordResetEmail(email: mail);
+}
+
 
 Future<void> setMail(mail) async {
   final prefs = await SharedPreferences.getInstance();

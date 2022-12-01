@@ -70,7 +70,7 @@ class _RegisterState extends State<RegisterPage> {
                     Container(
                       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15),
                       child: DotStepper(
-                            dotCount: 6,
+                            dotCount: 5,
                             dotRadius: MediaQuery.of(context).size.width * 0.03,
                             shape: Shape.circle,
                             spacing: MediaQuery.of(context).size.width * 0.1,        
@@ -101,7 +101,7 @@ class _RegisterState extends State<RegisterPage> {
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
                                             color: mainColor),
-                                child: Text("Увійти", 
+                                child: Text("Далі", 
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                               color: additionalColor,
