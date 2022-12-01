@@ -98,6 +98,27 @@ void setAge(age) async{
                            });
 }
 
+
+void addToFavorite(name, categories, image, ingridient, price) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+
+  final ref = FirebaseDatabase.instance.ref("Users/$userId/favorite/$name");
+  final snapshot = await ref.get();
+  if (snapshot.exists) {
+       ref.remove();
+  } else {
+      await ref.update({
+        "categories": categories,
+        "image": image,
+        "ingridient": ingridient,
+        "price": price
+      });
+  }
+  
+}
+
+
     
 
 

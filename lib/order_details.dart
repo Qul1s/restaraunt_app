@@ -49,7 +49,6 @@ import 'package:lottie/lottie.dart';
           order = jsonDecode(jsonEncode(event.snapshot.value)) as Map<String, dynamic>;
         });
       });
-
       setState(() {
         dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
     });

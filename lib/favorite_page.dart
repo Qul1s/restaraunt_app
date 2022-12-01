@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'authentication.dart';
 import 'dishes.dart';
 import 'order.dart';
 
@@ -53,7 +59,6 @@ import 'order.dart';
 
 
     void sortList(category){
-      createFavoriteList();
       List<Dish> tempList= [];
       if(category != "Все"){
         for (var element in dishesList) {
@@ -212,25 +217,30 @@ FontWeight fontWeight(index){
 
 final ScrollController _controller = ScrollController();
 
-void createFavoriteList(){
-      List<Dish> tempList= [];
-      setState(() {
-          dishesList = dishes;
-        });
-        for (var element in dishesList) {
-          for (var favoriteElement in Dish.favoriteList) {
-            if(element.name == favoriteElement){
-              tempList.add(element);
-            }
-          }
-          }
+String userId ='';
 
-          setState(() {
-            dishesList = tempList;
-        });
-        }
+void getUserId() async{
+  final prefs = await SharedPreferences.getInstance();
+  setState(() {
+    userId = (prefs.getString('userId') ?? '');
+  });
+}
 
+bool _visible = true;
+Future<void> _changeOpacity() async {
+    setState(() => _visible = !_visible);
+    await Future.delayed(const Duration(milliseconds: 250));
+    setState(() => _visible = !_visible);
+  }
 
+Icon returnIcon(name){
+      if(Dish.favoriteList.contains(name)){
+          return const Icon(Icons.favorite_outlined, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
+      }
+      else{
+        return const Icon(Icons.favorite_outline_rounded, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
+      }   
+    }
 
 Widget areaField(){
     double itemWidth = MediaQuery.of(context).size.width* 0.5;
@@ -260,12 +270,16 @@ Widget areaField(){
                                       ])));
     }
     else{
+      final menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite');
       return Expanded( child: Container( 
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           alignment: Alignment.topCenter,
-                          child: GridView.builder(
+                          child: FirebaseDatabaseQueryBuilder(
+                                  query: menuQuery,
+                                  builder: (context, snapshot, _) { 
+                                  return  GridView.builder(
                             controller: _controller,
-                            itemCount: dishesList.length,
+                            itemCount: snapshot.docs.length,
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 childAspectRatio: (itemWidth/itemHeight),
                                 crossAxisCount: 2,
@@ -276,7 +290,14 @@ Widget areaField(){
                                                     right: MediaQuery.of(context).size.width*0.04),
                             shrinkWrap: true,
                               itemBuilder: (BuildContext context, int index){
-                                return Container(
+                                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                  snapshot.fetchMore();
+                                  } 
+                                final dish = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
+                                String? name = snapshot.docs[index].key;
+                                return GestureDetector(
+                                  //onTap: () => showDialogWindow(dishes[index], context),
+                                  child:Container(
                                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height* 0.02,
                                                           top: MediaQuery.of(context).size.height* 0.01,
                                                           left: MediaQuery.of(context).size.width*0.03,
@@ -285,6 +306,14 @@ Widget areaField(){
                                   width: itemWidth,
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
                                     color: const Color.fromRGBO(255, 255, 255, 1),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 5), 
+                                      ),
+                                    ],
                                   ),
                                     child: Column(mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,15 +324,28 @@ Widget areaField(){
                                                 topLeft: Radius.circular(8),
                                                 topRight: Radius.circular(8),
                                               ),
-                                          child: Image.asset(dishesList[index].image, 
-                                                            fit: BoxFit.contain)),                       
+                                          child: Image.asset(dish["image"], 
+                                                            fit: BoxFit.contain)),
+                                        GestureDetector(
+                                          onTap: (() async {
+                                            _changeOpacity();
+                                            await Future.delayed(const Duration(milliseconds: 250));
+                                            addToFavorite(name, dish["categories"], dish["image"], dish["ingridient"], dish["price"]);
+                                          }),
+                                          child: AnimatedOpacity(
+                                                  opacity: _visible ? 1.0 : 0.0,
+                                                  duration: const Duration(milliseconds: 250),
+                                                  child:Container(
+                                            alignment: Alignment.topRight,
+                                            child: returnIcon(dish["name"])
+                                        )))                       
                                       ],),
                                       Container(
                                         height: MediaQuery.of(context).size.height* 0.045,
                                         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02,
                                                                 left: MediaQuery.of(context).size.width*0.01),
                                         alignment: Alignment.topLeft,
-                                        child: Text(dishesList[index].name,
+                                        child: Text(name.toString(),
                                             softWrap: true,
                                             style: GoogleFonts.poiretOne(
                                                 textStyle: TextStyle(
@@ -325,7 +367,7 @@ Widget areaField(){
                                                 color: Color.fromRGBO(254, 182, 102, 1),
                                                 fontSize: 17,
                                                 fontWeight: FontWeight.bold))),
-                                            Text(dishesList[index].price.toString(),
+                                            Text(dish["price"].toString(),
                                               style: GoogleFonts.nunito(
                                               textStyle: TextStyle(
                                               color: textColor,
@@ -361,8 +403,8 @@ Widget areaField(){
                                                                 color: Colors.white,))))),  
                                           ],))
                                   ],),
-                                  );
-                              })));
+                                  ));
+                              });})));
     }
   }
     dynamic currentFocus;
@@ -376,7 +418,7 @@ Widget areaField(){
     @override
       void initState() {
         super.initState();
-        createFavoriteList();
+        getUserId();
       }
 
     @override
@@ -438,7 +480,7 @@ Widget areaField(){
                                           }
                                           else{
                                             setState(() {
-                                               createFavoriteList();
+                                               //createFavoriteList();
                                             });
                                           }
                                       },

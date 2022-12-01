@@ -6,6 +6,7 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restaraunt_app/authentication.dart';
 import 'dishes.dart';
 import 'order.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -408,16 +409,7 @@ Widget areaField(){
                                           onTap: (() async {
                                             _changeOpacity();
                                             await Future.delayed(const Duration(milliseconds: 250));
-                                            if(Dish.favoriteList.contains(dishesList[index].name)){
-                                              setState(() {
-                                                Dish.favoriteList.remove(dishesList[index].name);
-                                              });
-                                            }
-                                            else{
-                                              setState(() {
-                                                Dish.favoriteList.add(dishesList[index].name);
-                                              }); 
-                                            }
+                                            addToFavorite(dish["name"], dish["categories"], dish["image"], dish["name"],dish["price"]);
                                           }),
                                           child: AnimatedOpacity(
                                                   opacity: _visible ? 1.0 : 0.0,
