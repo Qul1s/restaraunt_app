@@ -37,12 +37,7 @@ List<Dish> dishes = [
   Dish(name: "Десерт 'Смаколики'", ingridients: "6 видів найсмачніших смаколиків", price: 150, image: "images/Dessert/2.png", categories: "Десерти"),
   Dish(name: "Вишневий пиріг", ingridients: "Пиріг з соковитою вишневою начинкою", price: 160, image: "images/Dessert/3.png", categories: "Десерти"),
   Dish(name: "Наполеон з чорносливом", ingridients: "Торт з чорнсливом, прикрашений полуницею", price: 190, image: "images/Dessert/4.png", categories: "Десерти"),
-  
-  // Dish(name: "Pepsi 0.5", ingridients: "", price: 40, image: "images/Drinks/Pepsi.jpeg", categories: "Напої"),
-  // Dish(name: "Schweppes 0.5", ingridients: "", price: 40, image: "images/Drinks/Schweppes.jpeg", categories: "Напої"),
-  // Dish(name: "Боржомі 0.5", ingridients: "", price: 50, image: "images/Drinks/Borjomi.jpeg", categories: "Напої"),
-  // Dish(name: "Персиковий сік 0.5", ingridients: "", price: 50, image: "images/Drinks/peach_juice.jpeg", categories: "Напої"),
-  // Dish(name: "Ананасовий сік 0.5", ingridients: "", price: 50, image: "images/Drinks/pineapple_juice.jpeg", categories: "Напої"),
+
   ];
 
 

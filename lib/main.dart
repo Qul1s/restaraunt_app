@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:restaraunt_app/connection_error.dart';
 import 'package:restaraunt_app/main_screen.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'dart:developer' as developer;
 
 
 void main() async{
@@ -31,20 +28,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
 
-  // ConnectivityResult _connectionStatus = ConnectivityResult.none;
-  // final Connectivity _connectivity = Connectivity();
-  // late StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
-  Map _source = {ConnectivityResult.none: false};
+  Map _source = {ConnectivityResult.wifi: true};
   final MyConnectivity _connectivity = MyConnectivity.instance;
 
 @override
   void initState() {
     super.initState();
-    //StreamSubscription _connectionChangeStream;
-    //returnScreen();
-    // initConnectivity();
-    //_connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     _connectivity.initialise();
     _connectivity.myStream.listen((source) {
       setState(() => _source = source);
@@ -55,53 +45,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    //_connectivitySubscription.cancel();
     _connectivity.disposeStream();
     super.dispose();
   } 
-
-  //  Future<void> initConnectivity() async {
-  //   late ConnectivityResult result;
-  //     try {
-  //     result = await _connectivity.checkConnectivity();
-  //   } on PlatformException catch (e) {
-  //     developer.log('Couldn\'t check connectivity status', error: e);
-  //     return;
-  //   }
-  //   if (!mounted) {
-  //     return Future.value(null);
-  //   }
-  //   return _updateConnectionStatus(result);
-  // }
-
-  // Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-  //   setState(() {
-  //     _connectionStatus = result;
-  //   });
-  // }
   
   @override
   Widget build(BuildContext context) {
-    //if(){
-    //}
-    // else{
-    //   return const MaterialApp(
-    //      home: ConnectionErrorPage(),
-    // );
-    // }
     switch (_source.keys.toList()[0]) {
       case ConnectivityResult.mobile:
         return const MaterialApp(
         home: MainScreen(),
     );
-      case ConnectivityResult.wifi:
-        return const MaterialApp(
-        home: MainScreen(),
-    );
       case ConnectivityResult.none:
-      default:
         return const MaterialApp(
         home: ConnectionErrorPage(),
+    );
+     case ConnectivityResult.wifi:
+      default:
+        return const MaterialApp(
+        home: MainScreen(),
     );
     }
   }
@@ -126,7 +88,7 @@ class MyConnectivity {
   }
 
   void _checkStatus(ConnectivityResult result) async {
-    bool isOnline = false;
+    bool isOnline = true;
     try {
       final result = await InternetAddress.lookup('example.com');
       isOnline = result.isNotEmpty && result[0].rawAddress.isNotEmpty;

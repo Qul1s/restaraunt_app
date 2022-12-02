@@ -1,9 +1,7 @@
-import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:im_stepper/stepper.dart';
 import 'package:restaraunt_app/authentication.dart';
 import 'package:restaraunt_app/login_page.dart';
-import 'package:restaraunt_app/mailer.dart';
 import 'error_text.dart';
 import 'ftoast_controller.dart';
 
@@ -131,6 +129,7 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
         resetPassword(emailController.value.text);
        FtoastController.showPositiveToast(context, "Перевірте пошту"); 
        await Future.delayed(const Duration(seconds: 2));
+       // ignore: use_build_context_synchronously
        Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
     }
 }

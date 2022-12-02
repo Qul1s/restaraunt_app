@@ -22,8 +22,7 @@ import 'package:flutterfire_ui/database.dart';
 
   class _MenuPageState extends State<MenuPage> {
 
-    List<Dish> dishesList = dishes;
-    int selectCategory = 0;
+    //List<Dish> dishesList = dishes;
     
     Color mainColor = const Color.fromRGBO(255, 105, 49, 1);
     Color additionalColor = const Color.fromRGBO(248, 248, 248, 1);
@@ -36,24 +35,6 @@ import 'package:flutterfire_ui/database.dart';
 
 
 
-
-    void sortList(category){
-
-      List<Dish> tempList= [];
-      setState(() {
-          dishesList = dishes;
-        });
-      if(category != "Все"){
-        for (var element in dishesList) {
-          if(element.categories == category){
-            tempList.add(element);
-          }
-        }
-        setState(() {
-          dishesList = tempList;
-        });
-      }
-    }
 
     
 
@@ -290,7 +271,7 @@ void showDialogWindow(dish, context){
 }
 
 Color colorForText(index){
-    if(index == selectCategory){
+    if(index == categoryIndex){
       return Colors.black;
     }
     else{
@@ -299,7 +280,7 @@ Color colorForText(index){
 }
 
 FontWeight fontWeight(index){
-  if(index == selectCategory){
+  if(index == categoryIndex){
       return FontWeight.w500;
     }
     else{
@@ -322,10 +303,77 @@ void _scrollTop() {
   );
 }
 
+dynamic menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories");
+int categoryIndex = 0;
+
+void setUrl(){
+  
+  switch(categoryIndex){
+    case 0: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Menu').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories");
+    });
+  }
+  break;
+  case 1: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Menu').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories").equalTo("0Супи");
+    });
+  }
+  break;
+  case 2: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Menu').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories").equalTo("1Основні страви");
+    });
+  }
+  break;
+  case 3: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Menu').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories").equalTo("2Боули");
+    });
+  }
+  break;
+  case 4: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Menu').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories").equalTo("3Десерти");
+    });
+  }
+  break;
+  }
+
+  
+  
+}
+
 Widget areaField(){
     double itemWidth = MediaQuery.of(context).size.width* 0.5;
     double itemHeight= MediaQuery.of(context).size.width* 0.76;
-    if(dishesList.isEmpty){
+    if(menuQuery == null){
       return Expanded(
                   child:Container(
                                   width: MediaQuery.of(context).size.width* 0.95,
@@ -350,7 +398,6 @@ Widget areaField(){
                                       ])));
     }
     else{
-      final menuQuery = FirebaseDatabase.instance.ref('Menu');
       return Expanded( child: Container( 
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           alignment: Alignment.topCenter,
@@ -374,6 +421,7 @@ Widget areaField(){
                                   snapshot.fetchMore();
                                   } 
                                 final dish = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
+                                String name = snapshot.docs[index].key.toString();
                                 return GestureDetector(
                                   //onTap: () => showDialogWindow(dishes[index], context),
                                   child:Container(
@@ -409,14 +457,14 @@ Widget areaField(){
                                           onTap: (() async {
                                             _changeOpacity();
                                             await Future.delayed(const Duration(milliseconds: 250));
-                                            addToFavorite(dish["name"], dish["categories"], dish["image"], dish["name"],dish["price"]);
+                                            addToFavorite(name, dish["categories"], dish["image"], dish["name"],dish["price"]);
                                           }),
                                           child: AnimatedOpacity(
                                                   opacity: _visible ? 1.0 : 0.0,
                                                   duration: const Duration(milliseconds: 250),
                                                   child:Container(
                                             alignment: Alignment.topRight,
-                                            child: returnIcon(dish["name"])
+                                            child: returnIcon(name)
                                         )))                       
                                       ],),
                                       Container(
@@ -424,7 +472,7 @@ Widget areaField(){
                                         margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02,
                                                                 left: MediaQuery.of(context).size.width*0.01),
                                         alignment: Alignment.topLeft,
-                                        child: Text(dish["name"],
+                                        child: Text(name,
                                             softWrap: true,
                                             style: GoogleFonts.poiretOne(
                                                 textStyle: TextStyle(
@@ -454,7 +502,7 @@ Widget areaField(){
                                               fontWeight: FontWeight.bold))),
                                            GestureDetector(
                                             onTap: () {
-                                              OrderList.order.add(DishOrder(name: dishesList[index].name, price: dishesList[index].price, count: 1, image: dishesList[index].image));
+                                              OrderList.order.add(DishOrder(name: name, price: dish["price"], count: 1, image: dish["image"]));
                                               ShowDialog(context);
                                             },
                                             child: Container(
@@ -551,27 +599,7 @@ Widget areaField(){
                                                         right: MediaQuery.of(context).size.width*0.05),
                                 child: TextField(
                                       onChanged:(text) {
-                                          List<Dish> searchList = [];
-                                          setState(() {
-                                               dishesList = dishes;
-                                            });
-                                          if(searchController.value.text.isNotEmpty){
-                                              for(int i=0; i<dishesList.length; i++){
-                                                if(dishesList[i].name.toLowerCase().contains(searchController.value.text.toLowerCase())){
-                                                  setState(() {
-                                                    searchList.add(dishesList[i]);
-                                                  });
-                                                }
-                                            }
-                                          }
-                                          else{
-                                            setState(() {
-                                               searchList = dishes;
-                                            });
-                                          }
-                                          setState(() {
-                                               dishesList = searchList;
-                                            });
+                                         setUrl();
                                       },
                                       controller: searchController,
                                       obscureText: false,
@@ -617,9 +645,9 @@ Widget areaField(){
                                 onTap:() {
                                   _scrollTop();
                                   setState(() {
-                                    selectCategory = index;
+                                    categoryIndex = index;
                                   });
-                                  sortList(categoriesList[index]);
+                                  setUrl();
                                 },
                                 child: Container(
                                    decoration: BoxDecoration(
