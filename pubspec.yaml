@@ -39,6 +39,7 @@ dependencies:
   scroll_date_picker: ^3.6.0
   mailer: ^5.2.0
   url_launcher: ^6.1.7
+  connectivity_plus: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,8 @@ flutter:
   assets:
     - lottie/search.json
     - lottie/not_login.json
+    - lottie/connection_error.json
+    - lottie/loading.json
     - images/login_background.jpg
     - images/apple-black-logo.png
     - images/apple-logo.png
