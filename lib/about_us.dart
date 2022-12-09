@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
      const AboutUsPage({Key? key, 
@@ -17,8 +21,24 @@ class AboutUsPage extends StatefulWidget {
   class _AboutUsPageState extends State<AboutUsPage> {
 
     _AboutUsPageState();
+    dynamic info ='';
 
+    void getData(){
+      final ref = FirebaseDatabase.instance.ref('About');
 
+      Stream<DatabaseEvent> stream = ref.onValue;
+      stream.listen((DatabaseEvent event) {
+        setState(() {
+          info = jsonDecode(jsonEncode(event.snapshot.value)) as Map<String, dynamic>;
+        });
+      });
+    }
+
+    @override
+    void initState(){
+      getData();
+      super.initState();    
+  }
     @override
     Widget build(BuildContext context) {
       return Scaffold(
@@ -75,8 +95,8 @@ class AboutUsPage extends StatefulWidget {
                 width: MediaQuery.of(context).size.width,
                 child: FlutterMap(
                 options: MapOptions(
-                    center: LatLng(47.8296859, 31.1762674),
-                    zoom: 17.3,
+                    center: LatLng(info["latitude"], info["longitude"]),
+                    zoom: info["zoom"],
                 ),
                 children: [
                     TileLayer(
@@ -123,7 +143,7 @@ class AboutUsPage extends StatefulWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      Text("+380678964936",
+                      Text("+${info["number"]}",
                         style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                               color: Colors.black,
@@ -161,7 +181,7 @@ class AboutUsPage extends StatefulWidget {
                      child: Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                       Text("вул. Дружби народів 31",
+                       Text(info["address"],
                          style: GoogleFonts.montserrat(
                                textStyle: const TextStyle(
                                color: Colors.black,
@@ -199,7 +219,7 @@ class AboutUsPage extends StatefulWidget {
                      child: Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                       Text("Щодня 08:00-22:00",
+                       Text(info["schedule"],
                          style: GoogleFonts.montserrat(
                                textStyle: const TextStyle(
                                color: Colors.black,
@@ -210,11 +230,30 @@ class AboutUsPage extends StatefulWidget {
                            ]),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                            Icon(FontAwesomeIcons.facebook, size: 35),
-                            Icon(FontAwesomeIcons.instagram, size: 35),
-                            Icon(FontAwesomeIcons.globe, size: 35)
+                        children: [
+                            GestureDetector(
+                              onTap:() {
+                                _launchUrl(info["facebookURL"]);
+                              },
+                              child: const Icon(FontAwesomeIcons.facebook, size: 35)),
+                            GestureDetector(
+                              onTap:() {
+                                _launchUrl(info["instagramURL"]);
+                              },
+                              child: const Icon(FontAwesomeIcons.instagram, size: 35)),
+                            GestureDetector(
+                              onTap:() {
+                                _launchUrl(info["siteURL"]);
+                              },
+                              child: const  Icon(FontAwesomeIcons.globe, size: 35))
                             ]),        
             ]))]));
     }
+
+    Future<void> _launchUrl(url) async {
+      final Uri urlFinal = Uri.parse(url);
+      if (!await launchUrl(urlFinal)) {
+        throw 'Could not launch $urlFinal';
+      }
+}
   }  

@@ -127,7 +127,7 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
 
   void buttonAction() async{
         resetPassword(emailController.value.text);
-       FtoastController.showPositiveToast(context, "Перевірте пошту"); 
+       FtoastController.showPositiveToast(context, Icons.email_outlined, "Перевірте пошту"); 
        await Future.delayed(const Duration(seconds: 2));
        // ignore: use_build_context_synchronously
        Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));

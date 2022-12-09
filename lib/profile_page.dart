@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/about_us.dart';
+import 'package:restaraunt_app/saved_address.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_page.dart';
 import 'register_page.dart';
@@ -18,7 +20,7 @@ class ProfilePage extends StatefulWidget{
   Color textColor = const Color.fromRGBO(68, 68,68, 1);
   bool login = true;
 
-  class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin{
+  class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin{
 
     @override
     void initState(){
@@ -228,7 +230,9 @@ class ProfilePage extends StatefulWidget{
                                     ),
                                   ],
                                 ),
-                                Row(
+                                 GestureDetector(
+                                  onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const SavedAddressPage())),
+                                    child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
@@ -251,7 +255,7 @@ class ProfilePage extends StatefulWidget{
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),
                                   ],
-                                ),
+                                )),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -306,7 +310,12 @@ class ProfilePage extends StatefulWidget{
                                         ),
                                       ],
                                     )),
-                                Row(
+                                GestureDetector(
+                                  onTap:() {
+                                    Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+                                    _setLogin(false);
+                                  },
+                                    child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Container(
@@ -329,13 +338,20 @@ class ProfilePage extends StatefulWidget{
                                       child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
                                     ),
                                   ],
-                                ),
+                                )),
                               ],
                             ),
                           )
                       ],
             ));});                          
           }
+  }
+
+  void _setLogin(bool login) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('login', login);
+    });
   }
 
   }

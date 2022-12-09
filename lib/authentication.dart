@@ -102,7 +102,6 @@ void setAge(age) async{
 void addToFavorite(name, categories, image, ingridient, price) async{
   final prefs = await SharedPreferences.getInstance();
   var userId = (prefs.getString('userId') ?? '');
-
   final ref = FirebaseDatabase.instance.ref("Users/$userId/favorite/$name");
   final snapshot = await ref.get();
   if (snapshot.exists) {
@@ -115,7 +114,27 @@ void addToFavorite(name, categories, image, ingridient, price) async{
         "price": price
       });
   }
-  
+}
+
+
+void addAddress(apartment, building, entrance, floor, street) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+  final ref = FirebaseDatabase.instance.ref("Users/$userId/addresses/$street");
+      await ref.update({
+        "apartment": apartment,
+        "building": building,
+        "entrance": entrance,
+        "floor": floor
+      });
+}
+
+
+void deleteAddress(street) async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+  final ref = FirebaseDatabase.instance.ref("Users/$userId/addresses/$street");
+  ref.remove();
 }
 
 

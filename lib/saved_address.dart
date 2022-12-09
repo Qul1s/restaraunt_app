@@ -1,12 +1,19 @@
 // ignore_for_file: dead_code
 
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
+import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:restaraunt_app/authentication.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'address.dart';
 import 'error_text.dart';
+import 'ftoast_controller.dart';
 
 class SavedAddressPage extends StatefulWidget {
      const SavedAddressPage({Key? key, 
@@ -20,6 +27,23 @@ class SavedAddressPage extends StatefulWidget {
   class _SavedAddressPageState extends State<SavedAddressPage> {
 
     _SavedAddressPageState();
+    dynamic addressQuery='';
+    dynamic userId = '';
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  void getData() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = (prefs.getString('userId') ?? '');
+      addressQuery = FirebaseDatabase.instance.ref('Users/$userId/addresses');
+    });
+  }
+
 
 
     @override
@@ -39,7 +63,6 @@ class SavedAddressPage extends StatefulWidget {
                               Navigator.pop(context);
                             },
                             child: Container(
-                              
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: const Color.fromRGBO(252, 252, 252, 1),
@@ -77,19 +100,27 @@ class SavedAddressPage extends StatefulWidget {
                           child: Container(
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                             width: MediaQuery.of(context).size.width* 0.9,
-                            child: ListView.separated(
-                              itemCount: addressList.length,
+                            child: FirebaseDatabaseQueryBuilder(
+                                  query: addressQuery,
+                                  builder: (context, snapshot, _) { 
+                                  return ListView.separated(
+                              itemCount: snapshot.docs.length,
                               separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.015),
                               itemBuilder: (BuildContext context, int index){
+                                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                  snapshot.fetchMore();
+                                  } 
+                                final address = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
+                                String street = snapshot.docs[index].key.toString();
                                 return SwipeActionCell(
                                             backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
-                                            key: ObjectKey(addressList[index]), 
+                                            key: ObjectKey(address), 
                                             trailingActions: <SwipeAction>[
                                               SwipeAction(
                                                   onTap: (CompletionHandler handler) async {
                                                     await handler(true);
                                                     setState(() {
-                                                      addressList.removeAt(index);
+                                                      deleteAddress(street);
                                                     });
                                                   },
                                               backgroundRadius: 0,
@@ -109,7 +140,7 @@ class SavedAddressPage extends StatefulWidget {
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text("${addressList[index].street}, ${addressList[index].building}", 
+                                            Text("$street, ${address["building"]}", 
                                               textAlign: TextAlign.center,
                                                 style: GoogleFonts.poiretOne(
                                                       textStyle: const TextStyle(
@@ -119,21 +150,21 @@ class SavedAddressPage extends StatefulWidget {
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                              Text("Квартира: ${addressList[index].apartment}", 
+                                              Text("Квартира: ${address["apartment"]}", 
                                                 textAlign: TextAlign.center,
                                                   style: GoogleFonts.poiretOne(
                                                         textStyle: const TextStyle(
                                                         color: Color.fromRGBO(31, 31, 47, 1),
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.w800))),
-                                              Text("Поверх: ${addressList[index].floor}", 
+                                              Text("Поверх: ${address["floor"]}", 
                                                 textAlign: TextAlign.center,
                                                   style: GoogleFonts.poiretOne(
                                                         textStyle: const TextStyle(
                                                         color: Color.fromRGBO(31, 31, 47, 1),
                                                         fontSize: 16,
                                                         fontWeight: FontWeight.w800))),
-                                              Text("Під'їзд: ${addressList[index].entrance}", 
+                                              Text("Під'їзд: ${address["entrance"]}", 
                                                 textAlign: TextAlign.center,
                                                   style: GoogleFonts.poiretOne(
                                                         textStyle: const TextStyle(
@@ -143,7 +174,7 @@ class SavedAddressPage extends StatefulWidget {
                                             ])
                                         ],)
                                         ));
-                              }))
+                              });}))
                         ),
                         GestureDetector( 
                           onTap: () => ShowDialog(context),
@@ -483,7 +514,15 @@ void ShowDialog(context){
                         width: MediaQuery.of(context).size.width* 0.9,
                         child: 
                       GestureDetector( 
-                          //onTap: () => ShowDialog(context),
+                          onTap:() async{
+                            if(streetController.text.isNotEmpty && buildingContoller.text.isNotEmpty){
+                              addAddress(apartmentContoller.value.text, buildingContoller.value.text, entranceContoller.value.text, floorContoller.value.text, streetController.value.text);
+                              FtoastController.showPositiveToast(context, Icons.add_location_alt_outlined, "Додано");
+                            }
+                            else{
+                              FtoastController.showToast(context, "Перевірте дані");
+                            }
+                          },
                           child: Container(
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,

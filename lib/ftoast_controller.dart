@@ -39,7 +39,7 @@ class FtoastController{
     );
   }
 
-  static void showPositiveToast(BuildContext context, String text){
+  static void showPositiveToast(BuildContext context, IconData icon, String text){
       FToast.toast(
       context,
       padding: const EdgeInsets.all(0),
@@ -60,7 +60,7 @@ class FtoastController{
               height: MediaQuery.of(context).size.height * 0.06,
               width: MediaQuery.of(context).size.width * 0.06,
               alignment: Alignment.center,
-              child: const Icon(Icons.email_outlined, color: Colors.white, size:15)),
+              child: Icon(icon, color: Colors.white, size:15)),
             child2Margin: EdgeInsets.only(left: MediaQuery.of(context).size.height * 0.015),
             child2Alignment: Alignment.centerLeft,
             cornerStyle: FCornerStyle.round,
