@@ -303,11 +303,10 @@ void _scrollTop() {
   );
 }
 
-dynamic menuQuery = FirebaseDatabase.instance.ref('Menu').orderByChild("categories");
+dynamic menuQuery = "";
 int categoryIndex = 0;
 
 void setUrl(){
-  
   switch(categoryIndex){
     case 0: if (searchController.text.isNotEmpty){
     setState(() {
@@ -395,6 +394,30 @@ Widget areaField(){
                                           width: MediaQuery.of(context).size.width* 0.8,
                                           height: MediaQuery.of(context).size.height* 0.3
                                           ),
+                                      ])));
+    }
+    else if(menuQuery == ""){
+        return Expanded(
+                  child:Container(
+                                  width: MediaQuery.of(context).size.width* 0.95,
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset('lottie/loading_food.json',
+                                            width: MediaQuery.of(context).size.width* 0.8,
+                                            height: MediaQuery.of(context).size.height* 0.3
+                                            ),
+                                        AutoSizeText("Загрузка..",
+                                            style: GoogleFonts.poiretOne(
+                                              textStyle: TextStyle(
+                                              color: textColor,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w800)),
+                                            minFontSize: 12,
+                                            stepGranularity: 2,
+                                            textAlign: TextAlign.center),
                                       ])));
     }
     else{
@@ -552,12 +575,57 @@ Widget areaField(){
     }
 
     @override
-      void initState() {
+    void initState() {
+        setUrl();
         super.initState(); 
       }
 
+  @override
+  void didChangeDependencies() {      
+    preCache();
+    super.didChangeDependencies();  
+}
+
+bool isLoaded = false;
+
+void preCache(){
+    precacheImage(const AssetImage("images/login_background.jpg"), context);     
+    precacheImage(const AssetImage("images/apple-black-logo.png"), context); 
+    precacheImage(const AssetImage("images/Dessert/1.png"), context);  
+    precacheImage(const AssetImage("images/Dessert/2.png"), context);  
+    precacheImage(const AssetImage("images/Dessert/3.png"), context);  
+    precacheImage(const AssetImage("images/Dessert/4.png"), context);  
+    precacheImage(const AssetImage("images/Drinks/Borjomi.jpeg"), context);  
+    precacheImage(const AssetImage("images/Drinks/peach_juice.jpeg"), context);       
+    precacheImage(const AssetImage("images/Drinks/Pepsi.jpeg"), context);  
+    precacheImage(const AssetImage("images/Drinks/pineapple_juice.jpeg"), context);  
+    precacheImage(const AssetImage("images/Drinks/Schweppes.jpeg"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/1.png"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/2.png"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/3.png"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/4.png"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/5.png"), context);  
+    precacheImage(const AssetImage("images/Main_dishes/6.png"), context);  
+    precacheImage(const AssetImage("images/Salad/1.png"), context);  
+    precacheImage(const AssetImage("images/Salad/2.png"), context);  
+    precacheImage(const AssetImage("images/Salad/3.png"), context);  
+    precacheImage(const AssetImage("images/Soup/1.png"), context);  
+    precacheImage(const AssetImage("images/order_example.png"), context);  
+    precacheImage(const AssetImage("images/categories/all.png"), context);  
+    precacheImage(const AssetImage("images/categories/bowl.png"), context);  
+    precacheImage(const AssetImage("images/categories/dessert.png"), context);  
+    precacheImage(const AssetImage("images/categories/soup.png"), context);  
+    precacheImage(const AssetImage("images/restaraunt-logo.png"), context);  
+    precacheImage(const AssetImage("images/courier.png"), context);  
+    setState(() {
+      isLoaded = true;
+    });
+}
+
+
     @override
     Widget build(BuildContext context) {
+      if(isLoaded){
       return GestureDetector( 
           onTap: unfocus,
           child: Scaffold(
@@ -698,7 +766,10 @@ Widget areaField(){
                     ]
                   )),
                           ]),
-                          ])));
+                          ])));}
+       else{
+        return Text("Loading");
+     }
     }
 
 

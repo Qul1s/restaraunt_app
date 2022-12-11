@@ -1,3 +1,4 @@
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'social_login_button.dart';
@@ -38,7 +39,7 @@ class _StartState extends State<StartPage> {
                                     )),),
                                             GestureDetector(
                           onTap: (() {
-                            //buttonAction();
+                            buttonAction();
                             }),
                           behavior: HitTestBehavior.translucent,
                           child: Container(alignment: Alignment.center,
@@ -79,7 +80,13 @@ class _StartState extends State<StartPage> {
 
 
   void buttonAction(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> const LoginPage()));
+    Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
   }
 }
 

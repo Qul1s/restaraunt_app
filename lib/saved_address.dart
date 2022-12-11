@@ -9,6 +9,7 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/authentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'address.dart';
@@ -48,6 +49,31 @@ class SavedAddressPage extends StatefulWidget {
 
     @override
     Widget build(BuildContext context) {
+      if(addressQuery == ""){
+                  return Expanded(
+                            child:Container(
+                                            width: MediaQuery.of(context).size.width* 0.95,
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset('lottie/loading_food.json',
+                                                      width: MediaQuery.of(context).size.width* 0.8,
+                                                      height: MediaQuery.of(context).size.height* 0.3
+                                                      ),
+                                                  AutoSizeText("Загрузка..",
+                                                      style: GoogleFonts.poiretOne(
+                                                        textStyle: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w800)),
+                                                      minFontSize: 12,
+                                                      stepGranularity: 2,
+                                                      textAlign: TextAlign.center),
+                                                ])));
+              }
+      else{
       return Scaffold(
         backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
         body: Column( 
@@ -203,7 +229,7 @@ class SavedAddressPage extends StatefulWidget {
                                         )
                                         ))
                       ])
-      );
+      );}
       }
 
 

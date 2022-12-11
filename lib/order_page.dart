@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
@@ -26,7 +27,15 @@ import 'register_page.dart';
     Color textColor = const Color.fromRGBO(68, 68,68, 1);
 
     bool login = true;
+    dynamic ordersQuery = "";
 
+    @override
+    void initState() {
+    setState(() {
+      ordersQuery = FirebaseDatabase.instance.ref('Orders');
+    });
+    super.initState();
+    }
        
     @override
     Widget build(BuildContext context) {
@@ -55,7 +64,12 @@ import 'register_page.dart';
                                             textAlign: TextAlign.center), 
                                         GestureDetector(
                                           onTap: (() {
-                                            Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
                                           }),
                                           child:Container(alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.07,
@@ -72,7 +86,12 @@ import 'register_page.dart';
                                                                           fontWeight: FontWeight.w800)),),  
                                                                       )),
                                         GestureDetector(
-                                          onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const RegisterPage())),
+                                          onTap: () => Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              )),
                                           child: Container(alignment: Alignment.center,
                                                   height: MediaQuery.of(context).size.height * 0.03,
                                                   margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
@@ -88,7 +107,31 @@ import 'register_page.dart';
                                                         ]))
           ));}
           else{
-            final ordersQuery = FirebaseDatabase.instance.ref('Orders');
+            if(ordersQuery == ""){
+                  return Expanded(
+                            child:Container(
+                                            width: MediaQuery.of(context).size.width* 0.95,
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset('lottie/loading_food.json',
+                                                      width: MediaQuery.of(context).size.width* 0.8,
+                                                      height: MediaQuery.of(context).size.height* 0.3
+                                                      ),
+                                                  AutoSizeText("Загрузка..",
+                                                      style: GoogleFonts.poiretOne(
+                                                        textStyle: TextStyle(
+                                                        color: textColor,
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w800)),
+                                                      minFontSize: 12,
+                                                      stepGranularity: 2,
+                                                      textAlign: TextAlign.center),
+                                                ])));
+              }
+            else{
             return Container(
                     padding: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.05),
                     height: MediaQuery.of(context).size.height*0.927,
@@ -115,7 +158,7 @@ import 'register_page.dart';
                                     fontWeight: FontWeight.w800)))),
                           GestureDetector(
                             onTap:() {
-                              Navigator.pop(context);
+                              //Navigator.pop(context);
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -174,7 +217,12 @@ import 'register_page.dart';
                                         ],
                                         child:GestureDetector( 
                                           onTap: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=> OrderDetailsPage(index: index)));
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: OrderDetailsPage(index: index),
+                                                transition: StackTransition(),
+                                              ));
                                           },
                                     child: Container(
                                     padding: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05,
@@ -303,7 +351,7 @@ import 'register_page.dart';
                                                                             fontSize: 25,
                                                                             fontWeight: FontWeight.w800))),
                                   statusContainer(order["status"])
-                                  ],)]))));});})))]));                          
+                                  ],)]))));});})))]));}                          
           }
   }
 

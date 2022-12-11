@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
+import 'package:concentric_transition/page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -60,7 +62,13 @@ class ProfilePage extends StatefulWidget{
                                             textAlign: TextAlign.center), 
                                         GestureDetector(
                                           onTap: (() {
-                                            Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
                                           }),
                                           child:Container(alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.07,
@@ -77,7 +85,13 @@ class ProfilePage extends StatefulWidget{
                                                                           fontWeight: FontWeight.w800)),),  
                                                                       )),
                                         GestureDetector(
-                                          onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const RegisterPage())),
+                                          onTap: () => Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              )),
                                           child: Container(alignment: Alignment.center,
                                                   height: MediaQuery.of(context).size.height * 0.03,
                                                   margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
@@ -231,7 +245,13 @@ class ProfilePage extends StatefulWidget{
                                   ],
                                 ),
                                  GestureDetector(
-                                  onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const SavedAddressPage())),
+                                  onTap: () => Navigator.push( context,
+                                      AwesomePageRoute(
+                                        transitionDuration: const Duration(milliseconds: 600),
+                                        exitPage: widget,
+                                        enterPage: const SavedAddressPage(),
+                                        transition: StackTransition(),
+                                      )),
                                     child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -285,7 +305,15 @@ class ProfilePage extends StatefulWidget{
                                   width: MediaQuery.of(context).size.width*0.7,
                                   color: const Color.fromRGBO(90, 90, 90, 1)),
                                 GestureDetector(
-                                  onTap: () => Navigator.push(context,  MaterialPageRoute(builder: (context)=> const AboutUsPage())),
+                                  onTap:() {
+                                    Navigator.push( context,
+                                      AwesomePageRoute(
+                                        transitionDuration: const Duration(milliseconds: 600),
+                                        exitPage: widget,
+                                        enterPage: const AboutUsPage(),
+                                        transition: StackTransition(),
+                                      ));
+                                  },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
@@ -312,7 +340,13 @@ class ProfilePage extends StatefulWidget{
                                     )),
                                 GestureDetector(
                                   onTap:() {
-                                    Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+                                    Navigator.push( context,
+                                      AwesomePageRoute(
+                                        transitionDuration: const Duration(milliseconds: 600),
+                                        exitPage: widget,
+                                        enterPage: const LoginPage(),
+                                        transition: StackTransition(),
+                                      ));
                                     _setLogin(false);
                                   },
                                     child: Row(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -7,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
+import 'package:lottie/lottie.dart' as Lottie;
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -41,6 +43,31 @@ class AboutUsPage extends StatefulWidget {
   }
     @override
     Widget build(BuildContext context) {
+      if(info == ""){
+                  return Expanded(
+                            child:Container(
+                                            width: MediaQuery.of(context).size.width* 0.95,
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.Lottie.asset('lottie/loading_food.json',
+                                                      width: MediaQuery.of(context).size.width* 0.8,
+                                                      height: MediaQuery.of(context).size.height* 0.3
+                                                      ),
+                                                  AutoSizeText("Загрузка..",
+                                                      style: GoogleFonts.poiretOne(
+                                                        textStyle: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w800)),
+                                                      minFontSize: 12,
+                                                      stepGranularity: 2,
+                                                      textAlign: TextAlign.center),
+                                                ])));
+              }
+      else{
       return Scaffold(
         backgroundColor: const Color.fromRGBO(240, 240, 240, 1),
         body: Column( 
@@ -247,7 +274,7 @@ class AboutUsPage extends StatefulWidget {
                               },
                               child: const  Icon(FontAwesomeIcons.globe, size: 35))
                             ]),        
-            ]))]));
+            ]))]));}
     }
 
     Future<void> _launchUrl(url) async {

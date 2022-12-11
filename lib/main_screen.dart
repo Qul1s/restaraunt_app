@@ -1,4 +1,5 @@
 
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
@@ -47,7 +48,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
     Iconsax.profile_2user, 
   ];
 
-  List<String> categories = ["Меню", "Замовлення", "Профіль", "Налаштування"];
 
   double sizeOfIcon(number){
     if(number == _bottomNavIndex){
@@ -67,6 +67,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
     }
   }
 
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +103,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
                                   ),
         ),
       );
+      }
 }
       
 
@@ -330,7 +332,12 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                           onTap: (() {
-                                            //Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+                                            //  Navigator.push( context,
+                                            //   AwesomePageRoute(
+                                            //     transitionDuration: const Duration(milliseconds: 600),
+                                            //     enterPage: const MainScreen(),
+                                            //     transition: StackTransition(),
+                                            //   ));
                                           }),
                                           child: Container(
                                             alignment: Alignment.center,
@@ -370,4 +377,4 @@ void ShowDialog(context){
      }
   return sum;
 } 
-}
+

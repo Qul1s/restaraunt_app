@@ -10,7 +10,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  //initializeFirebase();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

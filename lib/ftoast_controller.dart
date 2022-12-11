@@ -4,7 +4,6 @@ import 'package:fsuper/fsuper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FtoastController{
-
     static void showToast(BuildContext context, String text){
       FToast.toast(
       context,

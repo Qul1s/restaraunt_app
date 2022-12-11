@@ -1,3 +1,4 @@
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:restaraunt_app/ftoast_controller.dart';
 import 'package:restaraunt_app/main_screen.dart';
@@ -193,7 +194,13 @@ void buttonAction(){
       if (passwordController.value.text.isNotEmpty) {
           bool result = loginUser(emailController.text, passwordController.text);
           if (result == true) {
-            Navigator.push(context,  MaterialPageRoute(builder: (context)=> const MainScreen()));
+            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const MainScreen(),
+                                                transition: StackTransition(),
+                                              ));
             _setLogin(true);
           } 
           else {

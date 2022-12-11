@@ -223,6 +223,7 @@ void getUserId() async{
   final prefs = await SharedPreferences.getInstance();
   setState(() {
     userId = (prefs.getString('userId') ?? '');
+    menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite');
   });
 }
 
@@ -245,7 +246,7 @@ Icon returnIcon(name){
 Widget areaField(){
     double itemWidth = MediaQuery.of(context).size.width* 0.5;
     double itemHeight= MediaQuery.of(context).size.width* 0.76;
-    if(dishesList.isEmpty){
+    if(menuQuery == null){
       return Expanded(
                   child:Container(
                                   width: MediaQuery.of(context).size.width* 0.95,
@@ -269,8 +270,31 @@ Widget areaField(){
                                           ),
                                       ])));
     }
+    else if(menuQuery == ""){
+                  return Expanded(
+                            child:Container(
+                                            width: MediaQuery.of(context).size.width* 0.95,
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset('lottie/loading_food.json',
+                                                      width: MediaQuery.of(context).size.width* 0.8,
+                                                      height: MediaQuery.of(context).size.height* 0.3
+                                                      ),
+                                                  AutoSizeText("Загрузка..",
+                                                      style: GoogleFonts.poiretOne(
+                                                        textStyle: TextStyle(
+                                                        color: textColor,
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w800)),
+                                                      minFontSize: 12,
+                                                      stepGranularity: 2,
+                                                      textAlign: TextAlign.center),
+                                                ])));
+              }
     else{
-      final menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite');
       return Expanded( child: Container( 
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                           alignment: Alignment.topCenter,
@@ -414,6 +438,8 @@ Widget areaField(){
       currentFocus.unfocus();
     }
     }
+
+    dynamic menuQuery = "";
 
     @override
       void initState() {

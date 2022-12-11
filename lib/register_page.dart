@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:im_stepper/stepper.dart';
@@ -127,7 +128,13 @@ class _RegisterState extends State<RegisterPage> {
         activeStep += 1; 
         }
       else{
-        Navigator.push(context,  MaterialPageRoute(builder: (context)=> const MainScreen()));
+       Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              ));
         }
      });
     }

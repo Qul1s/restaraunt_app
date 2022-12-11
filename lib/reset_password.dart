@@ -1,4 +1,5 @@
 
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:restaraunt_app/authentication.dart';
 import 'package:restaraunt_app/login_page.dart';
@@ -130,6 +131,12 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
        FtoastController.showPositiveToast(context, Icons.email_outlined, "Перевірте пошту"); 
        await Future.delayed(const Duration(seconds: 2));
        // ignore: use_build_context_synchronously
-       Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
+       Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
     }
 }
