@@ -1,5 +1,5 @@
-import 'dart:convert';
 
+import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
@@ -10,8 +10,9 @@ import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'authentication.dart';
 import 'login_page.dart';
-import 'order.dart';
 import 'order_details.dart';
 import 'register_page.dart';
 
@@ -28,14 +29,20 @@ import 'register_page.dart';
     Color textColor = const Color.fromRGBO(68, 68,68, 1);
 
     bool login = true;
-    dynamic ordersQuery = "";
+    dynamic ordersQuery = FirebaseDatabase.instance.ref('Orders');
 
     @override
     void initState() {
-    setState(() {
-      ordersQuery = FirebaseDatabase.instance.ref('Orders');
-    });
-    super.initState();
+      getData();
+      super.initState();
+    }
+
+    void getData() async{
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        var userId = (prefs.getString('userId') ?? '');
+        ordersQuery = FirebaseDatabase.instance.ref('Orders').orderByChild("userId").equalTo(userId);
+      });
     }
        
     @override
@@ -198,30 +205,14 @@ import 'register_page.dart';
                                   snapshot.fetchMore();
                                   } 
                                 final order = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
-                                var dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
-                                return SwipeActionCell(
-                                            backgroundColor: const Color.fromRGBO(252, 252, 252, 1),
-                                            key: ObjectKey(ReadyOrderList.readyOrder[index]), 
-                                            trailingActions: <SwipeAction>[
-                                              SwipeAction(
-                                                  onTap: (CompletionHandler handler) async {
-                                                    await handler(true);
-                                                    setState(() {
-                                                      ReadyOrderList.readyOrder.removeAt(index);
-                                                    });
-                                                  },
-                                              backgroundRadius: 0,
-                                              performsFirstActionWithFullSwipe: true,
-                                              widthSpace: MediaQuery.of(context).size.width* 0.2,
-                                              icon: const Icon(Iconsax.trash, color: Colors.white, size: 30),
-                                              color: Colors.red),
-                                        ],
-                                        child:GestureDetector( 
+                                var indexTemp = snapshot.docs[index].key.toString();
+                                var dishesQuery = FirebaseDatabase.instance.ref('Orders/$indexTemp/dishes');
+                                return GestureDetector( 
                                           onTap: () {
                                             Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
-                                                enterPage: OrderDetailsPage(index: index),
+                                                enterPage: OrderDetailsPage(index: indexTemp.toString()),
                                                 transition: StackTransition(),
                                               ));
                                           },
@@ -352,7 +343,7 @@ import 'register_page.dart';
                                                                             fontSize: 25,
                                                                             fontWeight: FontWeight.w800))),
                                   statusContainer(order["status"])
-                                  ],)]))));});})))]));}                          
+                                  ],)])));});})))]));}                          
           }
   }
 
@@ -422,3 +413,4 @@ import 'register_page.dart';
     }
   }
 }
+

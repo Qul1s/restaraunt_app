@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
  // ignore: must_be_immutable
  class OrderDetailsPage extends StatefulWidget {
-    int index;
+    String index;
      OrderDetailsPage({Key? key, 
       required this.index
     }) : super(key: key);
@@ -29,7 +29,7 @@ import 'package:url_launcher/url_launcher.dart';
        
     Color additionalColor = const Color.fromRGBO(248, 248, 248, 1);
     Color textColor = const Color.fromRGBO(68, 68,68, 1);
-    int index;
+    String index;
 
     ScrollController _controller = ScrollController();
 
@@ -43,7 +43,7 @@ import 'package:url_launcher/url_launcher.dart';
   }
 
   void getData() async{
-      final ref = FirebaseDatabase.instance.ref('Orders/${index+1}');
+      final ref = FirebaseDatabase.instance.ref('Orders/$index');
 
       Stream<DatabaseEvent> stream = ref.onValue;
       stream.listen((DatabaseEvent event) {
@@ -52,7 +52,7 @@ import 'package:url_launcher/url_launcher.dart';
         });
       });
       setState(() {
-        dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
+        dishesQuery = FirebaseDatabase.instance.ref('Orders/$index/dishes');
     });
 
     final secondRef = FirebaseDatabase.instance.ref('About');
@@ -478,7 +478,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:25", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFirstProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -687,7 +687,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfSecondProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -713,7 +713,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:20", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFirstProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -852,7 +852,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("21:25", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfThirdProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -878,7 +878,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfSecondProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -904,7 +904,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:20", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFirstProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1031,7 +1031,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("21:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFourthProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1110,7 +1110,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("21:25", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfThirdProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1136,7 +1136,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfSecondProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1162,7 +1162,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:20", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFirstProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1260,7 +1260,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("22:10", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFifthProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1286,7 +1286,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("21:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFourthProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1312,7 +1312,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("21:25", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfThirdProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1338,7 +1338,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:40", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfSecondProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
@@ -1364,7 +1364,7 @@ import 'package:url_launcher/url_launcher.dart';
                         Container(
                                 alignment: Alignment.centerRight,
                                 width: MediaQuery.of(context).size.width*0.15,
-                                child: Text("20:20", style: GoogleFonts.poiretOne(
+                                child: Text(order["timeOfFirstProcess"], style: GoogleFonts.poiretOne(
                                                                                   textStyle: const TextStyle(
                                                                                   color: Color.fromRGBO(254, 182, 102, 1),
                                                                                   fontSize: 14,
