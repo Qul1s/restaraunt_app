@@ -69,6 +69,7 @@ flutter:
     - lottie/loading.json
     - lottie/loading_food.json
     - lottie/done.json
+    - lottie/error.json
     - images/login_background.jpg
     - images/apple-black-logo.png
     - images/apple-logo.png

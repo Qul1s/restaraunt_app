@@ -1,4 +1,5 @@
 
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:restaraunt_app/menu_page2.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'favorite_page.dart';
+import 'final_order_page.dart';
 import 'order.dart';
 import 'order_page.dart';
 import 'package:iconsax/iconsax.dart';
@@ -330,14 +332,16 @@ void ShowDialog(context){
                                       fontWeight: FontWeight.w600))),                                ),
                         ],)),
                          GestureDetector(
-                                          onTap: (() {
-                                            //  Navigator.push( context,
-                                            //   AwesomePageRoute(
-                                            //     transitionDuration: const Duration(milliseconds: 600),
-                                            //     enterPage: const MainScreen(),
-                                            //     transition: StackTransition(),
-                                            //   ));
-                                          }),
+                                            onTap: (() {
+                                            if(OrderList.order != []){
+                                              Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const FinalOrderPage(),
+                                                transition: StackTransition(),
+                                              ));
+                                            }
+                                                  }),
                                           child: Container(
                                             alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.05,

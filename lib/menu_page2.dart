@@ -1014,13 +1014,15 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                           onTap: (() {
-                                            Navigator.push( context,
+                                            if(OrderList.order != []){
+                                              Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
                                                 exitPage: widget,
                                                 enterPage: const FinalOrderPage(),
                                                 transition: StackTransition(),
                                               ));
+                                            }
                                                   }),
                                           child: Container(
                                             alignment: Alignment.center,

@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restaraunt_app/authentication.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
 import 'package:time_picker_sheet/widget/sheet.dart';
@@ -497,6 +498,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
+                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], street, sumOfElements(), OrderList.order, getTimeText(), getPaymentText());
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
@@ -684,6 +686,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
+                             addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], street, sumOfElements(), OrderList.order, getTimeText(), getPaymentText());
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,

@@ -12,10 +12,27 @@ class DishOrder{
     required this.count,
     required this.image
   });
-}
+
+  Map<String, dynamic> toJson(){
+    return {
+        'name': name,
+        'price': price,
+        'count': count,
+        'image': image,
+        };
+      }
+  }
+
 
 class OrderList{
    static List<DishOrder> order = [];
+
+   Map<String, dynamic> toJson() {
+    return {
+      
+      'dish': order.map((e) => e.toJson()).toList(),
+    };
+  }
 }
 
 class ReadyOrder{

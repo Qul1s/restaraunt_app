@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/main_screen.dart';
 
+import 'order.dart';
+
 class DashboardPage extends StatefulWidget {
     const DashboardPage({Key? key}) : super(key: key);
 
@@ -19,6 +21,9 @@ class DashboardPage extends StatefulWidget {
     Widget build(BuildContext context) {
       return GestureDetector( 
         onTap:() {
+          setState(() {
+            OrderList.order = [];
+          });
           Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
