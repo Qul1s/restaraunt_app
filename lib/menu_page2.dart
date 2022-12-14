@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
@@ -7,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/authentication.dart';
+import 'package:restaraunt_app/final_order_page.dart';
 import 'dishes.dart';
 import 'order.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -465,7 +467,8 @@ Widget areaField(){
                                       ),
                                     ],
                                   ),
-                                    child: Column(mainAxisAlignment: MainAxisAlignment.start,
+                                    child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Stack(children: [
@@ -595,11 +598,6 @@ void preCache(){
     precacheImage(const AssetImage("images/Dessert/2.png"), context);  
     precacheImage(const AssetImage("images/Dessert/3.png"), context);  
     precacheImage(const AssetImage("images/Dessert/4.png"), context);  
-    precacheImage(const AssetImage("images/Drinks/Borjomi.jpeg"), context);  
-    precacheImage(const AssetImage("images/Drinks/peach_juice.jpeg"), context);       
-    precacheImage(const AssetImage("images/Drinks/Pepsi.jpeg"), context);  
-    precacheImage(const AssetImage("images/Drinks/pineapple_juice.jpeg"), context);  
-    precacheImage(const AssetImage("images/Drinks/Schweppes.jpeg"), context);  
     precacheImage(const AssetImage("images/Main_dishes/1.png"), context);  
     precacheImage(const AssetImage("images/Main_dishes/2.png"), context);  
     precacheImage(const AssetImage("images/Main_dishes/3.png"), context);  
@@ -610,7 +608,6 @@ void preCache(){
     precacheImage(const AssetImage("images/Salad/2.png"), context);  
     precacheImage(const AssetImage("images/Salad/3.png"), context);  
     precacheImage(const AssetImage("images/Soup/1.png"), context);  
-    precacheImage(const AssetImage("images/order_example.png"), context);  
     precacheImage(const AssetImage("images/categories/all.png"), context);  
     precacheImage(const AssetImage("images/categories/bowl.png"), context);  
     precacheImage(const AssetImage("images/categories/dessert.png"), context);  
@@ -995,8 +992,14 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                           onTap: (() {
-                                            //Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
-                                          }),
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const FinalOrderPage(),
+                                                transition: StackTransition(),
+                                              ));
+                                                  }),
                                           child: Container(
                                             alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.05,

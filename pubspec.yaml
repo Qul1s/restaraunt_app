@@ -42,6 +42,13 @@ dependencies:
   connectivity_plus: ^3.0.2
   concentric_transition: ^1.0.3
   awesome_page_transitions: ^1.0.0
+  switcher: ^1.0.0
+  flutter_switch: ^0.3.2
+  toggle_switch: ^2.0.1
+  flutter_datetime_picker: ^1.5.1
+  time_picker_sheet: ^0.0.2+1
+  swipeable_button_view: ^0.0.2
+  page_transition: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +68,7 @@ flutter:
     - lottie/connection_error.json
     - lottie/loading.json
     - lottie/loading_food.json
+    - lottie/done.json
     - images/login_background.jpg
     - images/apple-black-logo.png
     - images/apple-logo.png
@@ -70,11 +78,6 @@ flutter:
     - images/Dessert/2.png
     - images/Dessert/3.png
     - images/Dessert/4.png
-    - images/Drinks/Borjomi.jpeg
-    - images/Drinks/peach_juice.jpeg
-    - images/Drinks/Pepsi.jpeg
-    - images/Drinks/pineapple_juice.jpeg
-    - images/Drinks/Schweppes.jpeg
     - images/Main_dishes/1.png
     - images/Main_dishes/2.png
     - images/Main_dishes/3.png
@@ -86,7 +89,6 @@ flutter:
     - images/Salad/3.png
     - images/Soup/1.png
     - images/Soup/2.png
-    - images/order_example.png
     - images/categories/all.png
     - images/categories/bowl.png
     - images/categories/dessert.png
@@ -94,6 +96,7 @@ flutter:
     - images/categories/soup.png
     - images/restaraunt-logo.png
     - images/courier.png
+    - images/logo.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

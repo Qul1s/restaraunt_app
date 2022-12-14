@@ -543,6 +543,7 @@ void ShowDialog(context){
                           onTap:() async{
                             if(streetController.text.isNotEmpty && buildingContoller.text.isNotEmpty){
                               addAddress(apartmentContoller.value.text, buildingContoller.value.text, entranceContoller.value.text, floorContoller.value.text, streetController.value.text);
+                              Navigator.pop(context);
                               FtoastController.showPositiveToast(context, Icons.add_location_alt_outlined, "Додано");
                             }
                             else{

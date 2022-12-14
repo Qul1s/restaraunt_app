@@ -121,12 +121,14 @@ class ProfilePage extends StatefulWidget{
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(border: Border.all(color: const Color.fromRGBO(90, 90, 90, 1), width: 1), borderRadius: const BorderRadius.all(Radius.circular(100)),),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            border: Border.all(color: const Color.fromRGBO(90, 90, 90, 1), width: 1), borderRadius: const BorderRadius.all(Radius.circular(100)),),
                           height: MediaQuery.of(context).size.height*0.13,
                           width: MediaQuery.of(context).size.height*0.13,
                           child: ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(100)),
-                            child: Image.asset("images/restaraunt-logo.png",
+                            child: Image.asset("images/logo.jpg",
                               height: MediaQuery.of(context).size.height*0.13,
                               width: MediaQuery.of(context).size.height*0.13, fit: BoxFit.contain,)
                           )),
