@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
  // ignore: must_be_immutable
  class OrderDetailsPage extends StatefulWidget {
@@ -34,6 +35,7 @@ import 'package:lottie/lottie.dart';
 
     dynamic order ='';
     dynamic dishesQuery;
+    dynamic phoneNumber = '';
     @override
     void initState(){
       getData();
@@ -52,6 +54,15 @@ import 'package:lottie/lottie.dart';
       setState(() {
         dishesQuery = FirebaseDatabase.instance.ref('Orders/${index+1}/dishes');
     });
+
+    final secondRef = FirebaseDatabase.instance.ref('About');
+
+      Stream<DatabaseEvent> secondStream = secondRef.onValue;
+      secondStream.listen((DatabaseEvent event) {
+        setState(() {
+          phoneNumber = jsonDecode(jsonEncode(event.snapshot.value)) as Map<String, dynamic>;
+        });
+      });
   }
 
        
@@ -247,7 +258,7 @@ import 'package:lottie/lottie.dart';
                                           color: Color.fromRGBO(31, 31, 47, 1),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w700))),     
-                                    Text(order["address"], 
+                                    Text("${order["address"]["street"]}, ${order["address"]["building"]}", 
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.montserrat(
                                           textStyle: const TextStyle(
@@ -502,13 +513,17 @@ import 'package:lottie/lottie.dart';
                                                                           fontSize: 18,
                                                                           fontWeight: FontWeight.w500))),   
                                                         ],),
-                                                Container(
-                                                  decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
+                                                GestureDetector( 
+                                                  onTap: () {
+                                                    _makePhoneCall("+${phoneNumber["number"]}");
+                                                  },
+                                                  child: Container(
+                                                    decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
                                                     borderRadius: BorderRadius.all(Radius.circular(15)),),
-                                                  width: MediaQuery.of(context).size.width* 0.13,
-                                                  height: MediaQuery.of(context).size.width* 0.11,
-                                                  alignment: Alignment.center,
-                                                  child: const Icon(Icons.phone, size: 25)),
+                                                    width: MediaQuery.of(context).size.width* 0.13,
+                                                    height: MediaQuery.of(context).size.width* 0.11,
+                                                    alignment: Alignment.center,
+                                                    child: const Icon(Icons.phone, size: 25))),
                                             ])
                   )
                   
@@ -1055,20 +1070,24 @@ import 'package:lottie/lottie.dart';
                                                                           color: textColor,
                                                                           fontSize: 16,
                                                                           fontWeight: FontWeight.w700))),
-                                                          Text("Антон",
+                                                          Text(order["courier"]["name"],
                                                               style: GoogleFonts.rubik(
                                                                           textStyle: TextStyle(
                                                                           color: textColor  ,
                                                                           fontSize: 18,
                                                                           fontWeight: FontWeight.w500))),   
                                                         ],),
-                                                Container(
+                                                GestureDetector( 
+                                                  onTap: () {
+                                                    _makePhoneCall("+${order["courier"]["number"]}");
+                                                  },
+                                                  child: Container(
                                                   decoration: const BoxDecoration(color: Color.fromRGBO(254, 182, 102, 1),
                                                     borderRadius: BorderRadius.all(Radius.circular(15)),),
                                                   width: MediaQuery.of(context).size.width* 0.13,
                                                   height: MediaQuery.of(context).size.width* 0.11,
                                                   alignment: Alignment.center,
-                                                  child: const Icon(Icons.phone, size: 25)),
+                                                  child: const Icon(Icons.phone, size: 25))),
                                             ])
                   )
                   
@@ -1770,5 +1789,14 @@ import 'package:lottie/lottie.dart';
             ]);
       }
     }
+
+
+    Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
   }
 

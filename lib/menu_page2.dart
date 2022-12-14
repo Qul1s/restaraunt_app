@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
@@ -765,7 +766,28 @@ void preCache(){
                           ]),
                           ])));}
        else{
-        return Text("Loading");
+        return Expanded(
+                            child:Container(
+                                            width: MediaQuery.of(context).size.width* 0.95,
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset('lottie/loading_food.json',
+                                                      width: MediaQuery.of(context).size.width* 0.8,
+                                                      height: MediaQuery.of(context).size.height* 0.3
+                                                      ),
+                                                  AutoSizeText("Загрузка..",
+                                                      style: GoogleFonts.poiretOne(
+                                                        textStyle: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.w800)),
+                                                      minFontSize: 12,
+                                                      stepGranularity: 2,
+                                                      textAlign: TextAlign.center),
+                                                ])));
      }
     }
 

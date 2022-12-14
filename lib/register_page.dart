@@ -1,4 +1,5 @@
 import 'dart:math';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -132,7 +133,7 @@ class _RegisterState extends State<RegisterPage> {
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
                                                 exitPage: widget,
-                                                enterPage: const RegisterPage(),
+                                                enterPage: const MainScreen(),
                                                 transition: StackTransition(),
                                               ));
         }

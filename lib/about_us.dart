@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 // ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
-import 'package:lottie/lottie.dart' as Lottie;
+import 'package:lottie/lottie.dart' as lottie;
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -52,7 +52,7 @@ class AboutUsPage extends StatefulWidget {
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  Lottie.Lottie.asset('lottie/loading_food.json',
+                                                  lottie.Lottie.asset('lottie/loading_food.json',
                                                       width: MediaQuery.of(context).size.width* 0.8,
                                                       height: MediaQuery.of(context).size.height* 0.3
                                                       ),

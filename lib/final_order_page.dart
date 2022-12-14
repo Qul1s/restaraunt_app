@@ -145,7 +145,7 @@ import 'order.dart';
                                 child: const Icon(Icons.close_rounded, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                           ))
                           ],),
-                            Container(
+                            SizedBox(
                                 height: MediaQuery.of(context).size.height*0.35,
                                 width: MediaQuery.of(context).size.width* 0.9,
                                 child: ListView.separated(
@@ -484,10 +484,9 @@ import 'order.dart';
                                       color: Colors.white,
                                       fontSize: 21,
                                       fontWeight: FontWeight.w800)),
-                          buttonWidget: Container(
-                              child: const Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Colors.grey,
-                                      ),),
+                          buttonWidget: const Icon(Icons.arrow_forward_ios_rounded,
+                              color: Colors.grey,
+                                  ),
                           activeColor: const Color.fromRGBO(254, 182, 102, 1),
                           isFinished: isFinished,
                           onWaitingProcess: () {
@@ -513,7 +512,6 @@ import 'order.dart';
         );
       }
       else{
-        print(pickupAddress);
         return Container(
             height: MediaQuery.of(context).size.height*0.5,
               width: MediaQuery.of(context).size.width* 0.9,
@@ -673,10 +671,9 @@ import 'order.dart';
                                       color: Colors.white,
                                       fontSize: 21,
                                       fontWeight: FontWeight.w800)),
-                          buttonWidget: Container(
-                              child: const Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Colors.grey,
-                                      ),),
+                          buttonWidget: const Icon(Icons.arrow_forward_ios_rounded,
+                              color: Colors.grey,
+                                  ),
                           activeColor: const Color.fromRGBO(254, 182, 102, 1),
                           isFinished: isFinished,
                           onWaitingProcess: () {
@@ -816,38 +813,34 @@ import 'order.dart';
                       shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(25))),
                   contentPadding: const EdgeInsets.all(0),
-                  content: Container(
-                    child: ToggleSwitch(
-                                  isVertical: true,
-                                  minWidth: MediaQuery.of(context).size.width* 0.9,
-                                  minHeight: MediaQuery.of(context).size.height* 0.1,
-                                  fontSize: 20,
-                                  cornerRadius: 15,
-                                  animate: true,
-                                  curve: Curves.fastOutSlowIn,
-                                  animationDuration: 500,
-                                  initialLabelIndex: secondInitialIndex,
-                                  activeBgColor: const [ Color.fromRGBO(254, 182, 102, 1)],
-                                  activeFgColor: Colors.white,
-                                  inactiveBgColor: const Color.fromRGBO(200, 200, 200, 1),
-                                  inactiveFgColor: Colors.black,
-                                  totalSwitches: 2,
-                                  customTextStyles: [GoogleFonts.poiretOne(
-                                      textStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600))],
-                                  labels: const ["Готівка", "Картою"],
-                                  onToggle: (index) {
-                                    setState(() {
-                                      secondInitialIndex = index!;
-                                      payment = !payment;
-                                      print(payment);
-                                      print(getPaymentText());
-                                    });
-                                  },
-                                ),
-                  ));}));
+                  content: ToggleSwitch(
+                                isVertical: true,
+                                minWidth: MediaQuery.of(context).size.width* 0.9,
+                                minHeight: MediaQuery.of(context).size.height* 0.1,
+                                fontSize: 20,
+                                cornerRadius: 15,
+                                animate: true,
+                                curve: Curves.fastOutSlowIn,
+                                animationDuration: 500,
+                                initialLabelIndex: secondInitialIndex,
+                                activeBgColor: const [ Color.fromRGBO(254, 182, 102, 1)],
+                                activeFgColor: Colors.white,
+                                inactiveBgColor: const Color.fromRGBO(200, 200, 200, 1),
+                                inactiveFgColor: Colors.black,
+                                totalSwitches: 2,
+                                customTextStyles: [GoogleFonts.poiretOne(
+                                    textStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w600))],
+                                labels: const ["Готівка", "Картою"],
+                                onToggle: (index) {
+                                  setState(() {
+                                    secondInitialIndex = index!;
+                                    payment = !payment;
+                                  });
+                                },
+                              ));}));
     }
 
     void openTimeSheet() async{ 
