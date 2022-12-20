@@ -1,64 +1,70 @@
 
 // ignore_for_file: avoid_print
 
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:restaraunt_app/order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'ftoast_controller.dart';
 
 
 class AuthenticationServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
-  Future createNewUser(String password) async {
+  Future<bool> createNewUser(String password, context) async{
     final prefs = await SharedPreferences.getInstance();
     String mail =  prefs.getString('mail').toString();
+    User? user;
+    bool success = true;
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: mail, password: password);
-      User? user = result.user;
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('userId', user!.uid);
-      return user;
-    } catch (e) {
-      print(e.toString());
+      //UserCredential result = 
+      await _auth.createUserWithEmailAndPassword(email: mail, password: password).then((value){
+        user = value.user; 
+        prefs.setString('userId', user!.uid);
+      }); 
     }
+    on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        FtoastController.showToast(context, 'Маленький пароль'); 
+      } else if (e.code == 'email-already-in-use') {
+        FtoastController.showToast(context, 'Такий акаунт вже існує'); 
+      }
+      success = false;
+    } 
+    catch (e) {
+      FtoastController.showToast(context, e.toString());
+      success = false;
+    }
+   return success;
   }
 
-
-  Future loginUser(String mail, String password) async {
+  Future<bool> loginUser(String mail, String password, context) async{
+    User? user;
+    bool success = true;
+    final prefs = await SharedPreferences.getInstance();
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: mail, password: password);
-      User? user = result.user;
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('userId', user!.uid);
-      return user;
-    } catch (e) {
-      print(e.toString());
+      await _auth.signInWithEmailAndPassword(email: mail, password: password).then((value){
+        user = value.user;   
+        prefs.setString('userId', user!.uid);
+      }); 
     }
+    on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        FtoastController.showToast(context, 'Акаунт не існує'); 
+      } else if (e.code == 'wrong-password') {
+        FtoastController.showToast(context, 'Неправильний пароль'); 
+      }
+      success = false;
+    } 
+    catch (e) {
+      FtoastController.showToast(context, e.toString());
+      success = false;
+    }
+   return success;
   }
-}
 
-  bool createUser(password) {
-  AuthenticationServices auth = AuthenticationServices();
-  dynamic result = auth.createNewUser(password);
-  if (result == null) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-bool loginUser(mail, password){
-  AuthenticationServices auth = AuthenticationServices();
-  dynamic result = auth.loginUser(mail, password);
-  if (result == null) {
-    return false;
-  } else {
-    return true;
-  }
 }
 
 void resetPassword(mail) async{
@@ -101,6 +107,18 @@ void setAge(age) async{
                            });
 }
 
+void setBonuses() async{
+  final prefs = await SharedPreferences.getInstance();
+  var userId = (prefs.getString('userId') ?? '');
+  final usersQuery = FirebaseDatabase.instance.ref('Users/$userId');
+   await usersQuery.update({
+                          "bonus": 0,
+                          "ordered": 0,
+                          "paid": 0,
+                           });
+}
+
+
 
 void addToFavorite(name, categories, image, ingridient, price) async{
   final prefs = await SharedPreferences.getInstance();
@@ -111,6 +129,7 @@ void addToFavorite(name, categories, image, ingridient, price) async{
        ref.remove();
   } else {
       await ref.update({
+        "name": name,
         "categories": categories,
         "image": image,
         "ingridient": ingridient,
@@ -120,11 +139,14 @@ void addToFavorite(name, categories, image, ingridient, price) async{
 }
 
 
-void addAddress(apartment, building, entrance, floor, street) async{
+
+void addAddress(code, name, apartment, building, entrance, floor, street) async{
   final prefs = await SharedPreferences.getInstance();
   var userId = (prefs.getString('userId') ?? '');
-  final ref = FirebaseDatabase.instance.ref("Users/$userId/addresses/$street");
+  final ref = FirebaseDatabase.instance.ref("Users/$userId/addresses/$code");
       await ref.update({
+        "street": street,
+        "name": name,
         "apartment": apartment,
         "building": building,
         "entrance": entrance,
@@ -141,7 +163,7 @@ void deleteAddress(street) async{
 }
 
 
-void addOrder(apartment, building, entrance, floor, street, price, dishes, time, payment) async{
+void addOrder(apartment, building, entrance, floor, street, price, dishes, time, payment, countOfCutlery) async{
 
   final prefs = await SharedPreferences.getInstance();
   var userId = (prefs.getString('userId') ?? '');
@@ -165,6 +187,7 @@ void addOrder(apartment, building, entrance, floor, street, price, dishes, time,
           "name": "",
           "number": ""
         },
+        "countOfCutlery": countOfCutlery,
         "dishes": setDishes(),
         "forTime": time,
         "payment": payment,
@@ -200,7 +223,7 @@ String getDataText(){
         else{
           month = DateTime.now().month.toString();
         }
-        return "$day:$month:$year";
+        return "$day.$month.$year";
 }
 
 
@@ -232,7 +255,3 @@ Map<String, dynamic> setDishes(){
   }
   return data;
 }
-
-    
-
-

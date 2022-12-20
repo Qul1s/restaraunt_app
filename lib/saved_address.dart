@@ -1,6 +1,7 @@
 // ignore_for_file: dead_code
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -136,7 +137,7 @@ class SavedAddressPage extends StatefulWidget {
                                   snapshot.fetchMore();
                                   } 
                                 final address = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
-                                String street = snapshot.docs[index].key.toString();
+                                String code = snapshot.docs[index].key.toString();
                                 return SwipeActionCell(
                                             backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
                                             key: ObjectKey(address), 
@@ -145,7 +146,7 @@ class SavedAddressPage extends StatefulWidget {
                                                   onTap: (CompletionHandler handler) async {
                                                     await handler(true);
                                                     setState(() {
-                                                      deleteAddress(street);
+                                                      deleteAddress(code);
                                                     });
                                                   },
                                               backgroundRadius: 0,
@@ -154,51 +155,67 @@ class SavedAddressPage extends StatefulWidget {
                                               icon: const Icon(Iconsax.trash, color: Colors.white, size: 30),
                                               color: Colors.red),
                                         ],
-                                        child: Container(
-                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
-                                                                right: MediaQuery.of(context).size.width* 0.05),
-                                        width: MediaQuery.of(context).size.width* 0.9,
-                                        height: MediaQuery.of(context).size.width* 0.17,
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                                              color: const Color.fromRGBO(255, 255, 255, 1)),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("$street, ${address["building"]}", 
-                                              textAlign: TextAlign.center,
-                                                style: GoogleFonts.poiretOne(
-                                                      textStyle: const TextStyle(
-                                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.w800))),
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        child: GestureDetector(
+                                          onTap: ((){
+                                            ShowDialog(context, code, "Змінити адресу", address["street"].toString(), address["name"].toString(), 
+                                            address["building"].toString(), address["entrance"].toString(), address["floor"].toString(), address["apartment"].toString());
+                                          }),
+                                          child: Container(
+                                            padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
+                                                                    right: MediaQuery.of(context).size.width* 0.05),
+                                            width: MediaQuery.of(context).size.width* 0.9,
+                                            height: MediaQuery.of(context).size.width* 0.17,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                                  color: const Color.fromRGBO(255, 255, 255, 1)),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                              Text("Квартира: ${address["apartment"]}", 
-                                                textAlign: TextAlign.center,
-                                                  style: GoogleFonts.poiretOne(
-                                                        textStyle: const TextStyle(
-                                                        color: Color.fromRGBO(31, 31, 47, 1),
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w800))),
-                                              Text("Поверх: ${address["floor"]}", 
-                                                textAlign: TextAlign.center,
-                                                  style: GoogleFonts.poiretOne(
-                                                        textStyle: const TextStyle(
-                                                        color: Color.fromRGBO(31, 31, 47, 1),
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w800))),
-                                              Text("Під'їзд: ${address["entrance"]}", 
-                                                textAlign: TextAlign.center,
-                                                  style: GoogleFonts.poiretOne(
-                                                        textStyle: const TextStyle(
-                                                        color: Color.fromRGBO(31, 31, 47, 1),
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w800))),
-                                            ])
-                                        ],)
-                                        ));
+                                                Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Text("${address["name"]}", 
+                                                  textAlign: TextAlign.center,
+                                                    style: GoogleFonts.nunito(
+                                                          textStyle: const TextStyle(
+                                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w800))),
+                                                Text("${address["street"]}, ${address["building"]}", 
+                                                  textAlign: TextAlign.center,
+                                                    style: GoogleFonts.poiretOne(
+                                                          textStyle: const TextStyle(
+                                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.w800))),
+                                                ],),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                  Text("Квартира: ${address["apartment"]}", 
+                                                    textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                            textStyle: const TextStyle(
+                                                            color: Color.fromRGBO(31, 31, 47, 1),
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w800))),
+                                                  Text("Поверх: ${address["floor"]}", 
+                                                    textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                            textStyle: const TextStyle(
+                                                            color: Color.fromRGBO(31, 31, 47, 1),
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w800))),
+                                                  Text("Під'їзд: ${address["entrance"]}", 
+                                                    textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                            textStyle: const TextStyle(
+                                                            color: Color.fromRGBO(31, 31, 47, 1),
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w800))),
+                                                ])
+                                            ],)
+                                            )));
                               });}))
                         ),
                         GestureDetector( 
@@ -233,17 +250,18 @@ class SavedAddressPage extends StatefulWidget {
 
 
 // ignore: non_constant_identifier_names
-void ShowDialog(context){
+void ShowDialog(context, [String code = "0", String text = "Додати адресу", String street = "", String name = "", String building= "", String entrance= "", String floor= "",String apartment= ""]){
 
   Color additionalColor = const Color.fromRGBO(40, 40, 40, 1);
   // ignore: prefer_final_fields
   bool submitted = false;
 
-  final TextEditingController streetController = TextEditingController();
-  final TextEditingController buildingContoller = TextEditingController();
-  final TextEditingController entranceContoller = TextEditingController();
-  final TextEditingController floorContoller = TextEditingController();
-  final TextEditingController apartmentContoller = TextEditingController();
+  final TextEditingController streetController = TextEditingController(text: street);
+  final TextEditingController nameController = TextEditingController(text: name);
+  final TextEditingController buildingContoller = TextEditingController(text: building);
+  final TextEditingController entranceContoller = TextEditingController(text: entrance);
+  final TextEditingController floorContoller = TextEditingController(text: floor);
+  final TextEditingController apartmentContoller = TextEditingController(text: apartment);
   showDialog<String>(
                  context: context,
                  builder: (BuildContext context) => StatefulBuilder(
@@ -255,7 +273,7 @@ void ShowDialog(context){
                   contentPadding: const EdgeInsets.all(0),
                   content: Container(
                     padding: EdgeInsets.all(MediaQuery.of(context).size.width*0.05),
-                    height: MediaQuery.of(context).size.height* 0.6,
+                    height: MediaQuery.of(context).size.height* 0.66,
                     width: MediaQuery.of(context).size.width*0.95,
                     decoration: const BoxDecoration(
                       color: Color.fromRGBO(245, 245, 245, 1),
@@ -275,7 +293,7 @@ void ShowDialog(context){
                                                     top: MediaQuery.of(context).size.height* 0.01),
                             width: MediaQuery.of(context).size.width* 0.5,
                             height: MediaQuery.of(context).size.height* 0.04,
-                            child: Text("Додати адресу", 
+                            child: Text(text, 
                               style: GoogleFonts.poiretOne(
                                     textStyle: const TextStyle(
                                     color: Color.fromRGBO(31, 31, 47, 1),
@@ -313,6 +331,50 @@ void ShowDialog(context){
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+              Container(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),     
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Назва",
+                    style: GoogleFonts.montserrat(
+                                                        textStyle: const TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w500))),
+                  Container(
+                          width:MediaQuery.of(context).size.width*0.9,
+                          height: MediaQuery.of(context).size.height * 0.03,
+                          alignment: Alignment.topCenter,
+                          child: TextField(
+                            onChanged: (text) => setState(() => text),
+                            controller: nameController,
+                            obscureText: false,
+                            textAlign: TextAlign.left,
+                            cursorColor: const Color.fromRGBO(40, 40, 40, 1),
+                            textAlignVertical: TextAlignVertical.bottom,
+                            decoration: InputDecoration(
+                              errorText: submitted
+                                  ? errorText(nameController)
+                                  : null,
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: additionalColor, width: 1.5)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: additionalColor, width: 1.5)),
+                              border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: additionalColor, width: 1.5)),
+                            ),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: additionalColor,
+                                fontFamily: "uaBrand",
+                                fontWeight: FontWeight.w400),
+                          ))   
+                          ])),
               Container(
               margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),     
               child: Column(
@@ -541,9 +603,15 @@ void ShowDialog(context){
                       GestureDetector( 
                           onTap:() async{
                             if(streetController.text.isNotEmpty && buildingContoller.text.isNotEmpty){
-                              addAddress(apartmentContoller.value.text, buildingContoller.value.text, entranceContoller.value.text, floorContoller.value.text, streetController.value.text);
+                              if(code == "0"){
+                                Random rnd = Random();
+                                  setState(() {
+                                    code = rnd.nextInt(1000000).toString();
+                                  });
+                              }
+                              addAddress(code, nameController.value.text, apartmentContoller.value.text, buildingContoller.value.text, entranceContoller.value.text, floorContoller.value.text, streetController.value.text);
                               Navigator.pop(context);
-                              FtoastController.showPositiveToast(context, Icons.add_location_alt_outlined, "Додано");
+                              FtoastController.showPositiveToast(context, Icons.add_location_alt_outlined, "Збережено");
                             }
                             else{
                               FtoastController.showToast(context, "Перевірте дані");
@@ -553,12 +621,12 @@ void ShowDialog(context){
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
                                                                 right: MediaQuery.of(context).size.width* 0.05),
-                                        width: MediaQuery.of(context).size.width* 0.3,
+                                        width: MediaQuery.of(context).size.width* 0.35,
                                         height: MediaQuery.of(context).size.height* 0.05,
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
                                                               color: const Color.fromRGBO(254, 182, 102, 1),),
                                         child: 
-                                            Text("Додати", 
+                                            Text("Зберегти", 
                                                 textAlign: TextAlign.center,
                                                   style: GoogleFonts.montserrat(
                                                         textStyle: const TextStyle(

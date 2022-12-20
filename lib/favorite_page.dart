@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +11,12 @@ import 'package:flutterfire_ui/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restaraunt_app/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'authentication.dart';
 import 'dishes.dart';
+import 'final_order_page.dart';
+import 'login_page.dart';
 import 'order.dart';
 
 
@@ -58,19 +63,7 @@ import 'order.dart';
     }
 
 
-    void sortList(category){
-      List<Dish> tempList= [];
-      if(category != "Все"){
-        for (var element in dishesList) {
-          if(element.categories == category){
-            tempList.add(element);
-          }
-        }
-        setState(() {
-          dishesList = tempList;
-        });
-      }
-    }
+  
 
     
 
@@ -184,7 +177,6 @@ void showDialogWindow(String text, int price, String image, context){
                                                         width: MediaQuery.of(context).size.width*0.18,
                                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
                                                             color: const Color.fromRGBO(255, 105, 49, 1)),
-                                                            
                                                         child: const Icon(Icons.shopping_cart_outlined, 
                                                               size: 30, 
                                                               color: Color.fromRGBO(250, 250, 250, 1),)))
@@ -227,21 +219,67 @@ void getUserId() async{
   });
 }
 
-bool _visible = true;
-Future<void> _changeOpacity() async {
-    setState(() => _visible = !_visible);
-    await Future.delayed(const Duration(milliseconds: 250));
-    setState(() => _visible = !_visible);
+void setUrl(){
+  switch(selectCategory){
+    case 0: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
   }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByChild("categories");
+    });
+  }
+  break;
+  case 1: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByChild("categories").equalTo("0Супи");
+    });
+  }
+  break;
+  case 2: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByChild("categories").equalTo("1Основні страви");
+    });
+  }
+  break;
+  case 3: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByChild("categories").equalTo("2Боули");
+    });
+  }
+  break;
+  case 4: if (searchController.text.isNotEmpty){
+    setState(() {
+      menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByKey().startAt("${searchController.value.text[0].toUpperCase()}${searchController.value.text.substring(1)}");
+    });
+  }
+  else{
+    setState(() {
+       menuQuery = FirebaseDatabase.instance.ref('Users/$userId/favorite').orderByChild("categories").equalTo("3Десерти");
+    });
+  }
+  break;
+  }
+}
 
-Icon returnIcon(name){
-      if(Dish.favoriteList.contains(name)){
-          return const Icon(Icons.favorite_outlined, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
-      }
-      else{
-        return const Icon(Icons.favorite_outline_rounded, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
-      }   
-    }
+
 
 Widget areaField(){
     double itemWidth = MediaQuery.of(context).size.width* 0.5;
@@ -352,17 +390,15 @@ Widget areaField(){
                                                             fit: BoxFit.contain)),
                                         GestureDetector(
                                           onTap: (() async {
-                                            _changeOpacity();
-                                            await Future.delayed(const Duration(milliseconds: 250));
-                                            addToFavorite(name, dish["categories"], dish["image"], dish["ingridient"], dish["price"]);
+                                            addToFavorite(dish["name"], dish["categories"], dish["image"], dish["ingridient"], dish["price"]);
+                                             setState(() {
+                                                favouriteList.remove(dish["name"]);
+                                              });
                                           }),
-                                          child: AnimatedOpacity(
-                                                  opacity: _visible ? 1.0 : 0.0,
-                                                  duration: const Duration(milliseconds: 250),
-                                                  child:Container(
+                                          child: Container(
                                             alignment: Alignment.topRight,
-                                            child: returnIcon(dish["name"])
-                                        )))                       
+                                            child: const Icon(Icons.favorite_outlined, size: 27, color: Color.fromRGBO(254, 182, 102, 1))
+                                        ))                       
                                       ],),
                                       Container(
                                         height: MediaQuery.of(context).size.height* 0.045,
@@ -443,12 +479,99 @@ Widget areaField(){
 
     @override
       void initState() {
+        getLogin();
         super.initState();
         getUserId();
+        setUrl();
       }
+
+ void _scrollTop() {
+  _controller.animateTo(
+    _controller.position.minScrollExtent,
+    duration: const Duration(seconds: 1),
+    curve: Curves.fastOutSlowIn,
+  );
+}
+
+   bool login = false;
+
+  void getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      login = prefs.getBool('login') ?? false;
+    });
+  }
 
     @override
     Widget build(BuildContext context) {
+      if(!login){return GestureDetector( 
+          child: Scaffold(
+            backgroundColor: additionalColor,
+                  body: Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset('lottie/not_login.json',
+                                          width: MediaQuery.of(context).size.width* 0.8,
+                                          height: MediaQuery.of(context).size.height* 0.3
+                                          ),
+                                        AutoSizeText("Щоб побачити свої замовлення, увійдіть в акаунт",
+                                            style: GoogleFonts.poiretOne(
+                                                                          textStyle: TextStyle(
+                                                                          color: textColor,
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.w800)),
+                                            minFontSize: 12,
+                                            stepGranularity: 2,
+                                            textAlign: TextAlign.center), 
+                                        GestureDetector(
+                                          onTap: (() {
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
+                                          }),
+                                          child:
+                                          Container(alignment: Alignment.center,
+                                            height: MediaQuery.of(context).size.height*0.07,
+                                            width: MediaQuery.of(context).size.width*0.8,
+                                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                          color: const Color.fromRGBO(254, 182, 102, 1)),
+                                            child: Text("Увійти", 
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.poiretOne(
+                                                                          textStyle: const TextStyle(
+                                                                          color: Color.fromRGBO(240, 240, 240, 1),
+                                                                          fontSize: 22,
+                                                                          fontWeight: FontWeight.w800)),),  
+                                                                      )),
+                                        GestureDetector(
+                                          onTap: () => Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              )),
+                                          child: Container(alignment: Alignment.center,
+                                                  height: MediaQuery.of(context).size.height * 0.03,
+                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
+                                                  child: Text("Немає акаунту? Зареєструватись", 
+                                                  style: GoogleFonts.poiretOne(
+                                                                          textStyle: TextStyle(
+                                                                          color: textColor,
+                                                                          fontSize: 16,
+                                                                          fontWeight: FontWeight.w800,
+                                                                          decoration: TextDecoration.underline,
+                                                                          decorationColor: textColor,)))
+                                        )),   
+                                                        ]))
+          ));}
+          else{
       return GestureDetector( 
           onTap: unfocus,
           child: Scaffold(
@@ -491,24 +614,7 @@ Widget areaField(){
                                                         right: MediaQuery.of(context).size.width*0.05),
                                 child: TextField(
                                       onChanged:(text) {
-                                          List<Dish> searchList = [];
-                                          if(searchController.value.text.isNotEmpty){
-                                              for(int i=0; i<dishesList.length; i++){
-                                                if(dishesList[i].name.toLowerCase().contains(searchController.value.text.toLowerCase())){
-                                                  setState(() {
-                                                    searchList.add(dishesList[i]);
-                                                  });
-                                                }
-                                            }
-                                            setState(() {
-                                               dishesList = searchList;
-                                            });
-                                          }
-                                          else{
-                                            setState(() {
-                                               //createFavoriteList();
-                                            });
-                                          }
+                                         setUrl();
                                       },
                                       controller: searchController,
                                       obscureText: false,
@@ -552,10 +658,11 @@ Widget areaField(){
                             itemBuilder: (BuildContext context, int index){
                               return GestureDetector(
                                 onTap:() {
+                                  _scrollTop();
                                   setState(() {
                                     selectCategory = index;
                                   });
-                                  sortList(categoriesList[index]);
+                                  setUrl();
                                 },
                                 child: Container(
                                    decoration: BoxDecoration(
@@ -606,7 +713,7 @@ Widget areaField(){
                     ]
                   )),
                           ]),
-                          ])));
+                          ])));}
     }
 
 
@@ -741,7 +848,7 @@ void ShowDialog(context){
                                                                 children: <TextSpan>[
                                                                     const TextSpan(text: "₴ ",                                                                 
                                                                     style: TextStyle(
-                                                                      color: Color.fromRGBO(255, 105, 49, 1),
+                                                                      color: Color.fromRGBO(254, 182, 102, 1),
                                                                       fontSize: 18,
                                                                       fontWeight: FontWeight.w700)),
                                                                     TextSpan(text: " ${OrderList.order[index].price*OrderList.order[index].count}",                                                                  
@@ -755,7 +862,7 @@ void ShowDialog(context){
                                                                   width: MediaQuery.of(context).size.width* 0.2,
                                                                   height: MediaQuery.of(context).size.height* 0.04,
                                                                   decoration: const BoxDecoration(
-                                                                    color: Color.fromRGBO(255, 105, 49, 1),
+                                                                    color: Color.fromRGBO(254, 182, 102, 1),
                                                                     borderRadius: BorderRadius.all(Radius.circular(10)),
                                                                   ),
                                                                   child: Row(
@@ -832,8 +939,16 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                           onTap: (() {
-                                            //Navigator.push(context,  MaterialPageRoute(builder: (context)=> const LoginPage()));
-                                          }),
+                                            if(OrderList.order != []){
+                                              Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const FinalOrderPage(),
+                                                transition: StackTransition(),
+                                              ));
+                                            }
+                                                  }),
                                           child: Container(
                                             alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.05,
@@ -842,7 +957,7 @@ void ShowDialog(context){
                                                                     left: MediaQuery.of(context).size.width*0.6,
                                                                     bottom: MediaQuery.of(context).size.height*0.02),
                                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                                          color: const Color.fromRGBO(255, 105, 49, 1),
+                                                          color: const Color.fromRGBO(254, 182, 102, 1),
                                                           boxShadow: [
                                                             BoxShadow(
                                                               color: Colors.grey.withOpacity(0.5),

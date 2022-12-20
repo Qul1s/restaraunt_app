@@ -47,7 +47,8 @@ class _MyAppState extends State<MyApp> {
     _connectivity.disposeStream();
     super.dispose();
   } 
-  
+
+ 
   @override
   Widget build(BuildContext context) {
     switch (_source.keys.toList()[0]) {
@@ -61,9 +62,10 @@ class _MyAppState extends State<MyApp> {
     );
      case ConnectivityResult.wifi:
       default:
-        return const MaterialApp(
-        home: MainScreen(),
-    );
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: MainScreen(),
+          );       
     }
   }
 }

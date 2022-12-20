@@ -14,9 +14,15 @@ class Dish{
       required this.categories
     });
 
-    static List<String> favoriteList = ["Курячі крильця"];
+    Dish.fromMap(Map<String, dynamic> map)
+      : name = map["name"],
+        ingridients = map["ingridients"],
+        price = map["price"],
+        image = map["image"],
+        categories = map["categories"];
 }
 
+List<String> favouriteList = [];
 
 List<Dish> dishes = [
   Dish(name: "Курячий суп з лапшою", ingridients: "Курка, лапша, сир, цибуля,  зелень", price: 110, image: "images/Soup/2.png", categories: "Супи"),

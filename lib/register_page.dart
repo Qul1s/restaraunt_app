@@ -8,6 +8,7 @@ import 'package:restaraunt_app/authentication.dart';
 import 'package:restaraunt_app/mailer.dart';
 import 'package:restaraunt_app/main_screen.dart';
 import 'package:scroll_date_picker/scroll_date_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'error_text.dart';
 import 'ftoast_controller.dart';
 
@@ -58,19 +59,34 @@ class _RegisterState extends State<RegisterPage> {
                         left: MediaQuery.of(context).size.width * 0.07,
                         right: MediaQuery.of(context).size.width * 0.07),
             child: Column(mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     GestureDetector( 
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }, 
-                          child:Container(
-                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
-                            alignment: Alignment.topLeft,
-                            child: Icon(Icons.arrow_back_outlined, size: 45, color: additionalColor)
+                     GestureDetector(
+                            onTap:() {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(252, 252, 252, 1),
+                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 5), 
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.04),
+                              width: MediaQuery.of(context).size.width* 0.1,
+                              height: MediaQuery.of(context).size.width* 0.1,
+                              child: const Icon(Icons.arrow_back_outlined, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                           )),
                     Container(
-                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15),
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.2),
                       child: DotStepper(
                             dotCount: 5,
                             dotRadius: MediaQuery.of(context).size.width * 0.03,
@@ -97,24 +113,25 @@ class _RegisterState extends State<RegisterPage> {
                             activeStep: activeStep,
                           )),
                       textFieldRegister(activeStep),
-                      GestureDetector( child: Container(alignment: Alignment.center,
-                                height: MediaQuery.of(context).size.height*0.08,
-                                width: MediaQuery.of(context).size.width*0.9,
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                            color: mainColor),
-                                child: Text("Далі", 
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                              color: additionalColor,
-                                              fontSize: 24,
-                                              fontFamily: "uaBrand",
-                                              fontWeight: FontWeight.w400
-                                              )),  
-                                                        ),
-                              onTap: (){
-                                buttonAction();
-                              },),]),
+                      Container( 
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width*0.9,
+                        child: GestureDetector(
+                          onTap: () => buttonAction(),
+                          child: Container(alignment: Alignment.center,
+                                              height: MediaQuery.of(context).size.height*0.07,
+                                              width: MediaQuery.of(context).size.width*0.8,
+                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                            color: const Color.fromRGBO(254, 182, 102, 1)),
+                                              child: Text("Далі", 
+                                                      textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                                            textStyle: const TextStyle(
+                                                                            color: Color.fromRGBO(240, 240, 240, 1),
+                                                                            fontSize: 22,
+                                                                            fontWeight: FontWeight.w800)),),  
+                                                                        ))),]),
             ),
       ),
     ));
@@ -122,20 +139,27 @@ class _RegisterState extends State<RegisterPage> {
 
     bool isValidPhoneNumber(String? value) => RegExp(r'(^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$)').hasMatch(value ?? '');
   
+    void _setLogin(bool login) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('login', login);
+    });
+  }
+  
     void nextStep(){
     setState(() {
       emailController.clear();
-      if(activeStep != 5){
+      if(activeStep != 4){
         activeStep += 1; 
         }
       else{
+      _setLogin(true);
        Navigator.push( context,
-                                              AwesomePageRoute(
-                                                transitionDuration: const Duration(milliseconds: 600),
-                                                exitPage: widget,
-                                                enterPage: const MainScreen(),
-                                                transition: StackTransition(),
-                                              ));
+          AwesomePageRoute(
+             transitionDuration: const Duration(milliseconds: 600),
+             enterPage: const MainScreen(),
+             transition: StackTransition(),
+           ));
         }
      });
     }
@@ -143,63 +167,68 @@ class _RegisterState extends State<RegisterPage> {
   int code = 1;
 
   void buttonAction(){
-    if(emailController.value.text.isNotEmpty || _selectedDate != DateTime.now()){
+    if(emailController.value.text != "" || _selectedDate!=DateTime.now()){
       switch(activeStep){
-      case 0:
-        setMail(emailController.value.text);
-        Random rnd = Random();
-        setState(() {
-          code = rnd.nextInt(10000);
-        });
-        sendToMail(emailController.value.text, code);
-        nextStep();
-        break;
-      case 1:
-        if(code == int.parse(emailController.value.text)){
+        case 0:
+        if(emailController.value.text.contains("@")){
+           setMail(emailController.value.text);
+          Random rnd = Random();
+          setState(() {
+            code = rnd.nextInt(10000);
+          });
+          sendToMail(emailController.value.text, code);
           nextStep();
         }
         else{
-           FtoastController.showToast(context, "Неправильний код");
+          FtoastController.showToast(context, "Неправильна пошта");
         }
-        break;
-      case 2:
-        if(emailController.value.text == passwordController.value.text){
-            bool result = createUser(emailController.text);
-            if (result == true) {
-              nextStep();
-            } 
-            else {
-              FtoastController.showToast(context, "Сталася помилка, спробуйте ще"); 
-            }  
+         break;
+        case 1:
+          if(code == int.parse(emailController.value.text)){
+            nextStep();
           }
           else{
-            FtoastController.showToast(context, "Паролі не збігаються");  
+            FtoastController.showToast(context, "Неправильний код");
+          }
+          break;
+        case 2:
+          if(emailController.value.text == passwordController.value.text){
+              AuthenticationServices auth = AuthenticationServices();
+              auth.createNewUser(emailController.text, context).then((value){
+              if (value) {
+                nextStep();
+              }
+              }); 
+            }
+            else{
+              FtoastController.showToast(context, "Паролі не збігаються");  
+            } 
+            break;
+        case 3:
+          if(isValidPhoneNumber(emailController.value.text)){
+            setPhoneNumber(emailController.value.text);
+            nextStep();
+          }
+          else{
+            FtoastController.showToast(context, "Неправильний номер");  
           } 
           break;
-      case 3:
-         if(isValidPhoneNumber(emailController.value.text)){
-          setPhoneNumber(emailController.value.text);
-          nextStep();
-        }
-        else{
-          FtoastController.showToast(context, "Неправильний номер");  
-        } 
-        break;
-      case 4:
-          setName(emailController.value.text);
-          nextStep();
-        break;
-      case 5:
-        if(_selectedDate.isBefore(DateTime.now()) && _selectedDate.isAfter(DateTime(1900))){
-          setAge(_selectedDate.toString());
-          nextStep();
-        }
-        else{
-          FtoastController.showToast(context, "Неправильна дата");  
-        } 
-        break; 
-    }
-    }
+        case 4:
+            setName(emailController.value.text);
+            nextStep();
+          break;
+        case 5:
+          if(_selectedDate.isBefore(DateTime.now()) && _selectedDate.isAfter(DateTime(1900))){
+            setAge(_selectedDate.toString());
+            setBonuses();
+            nextStep();
+          }
+          else{
+            FtoastController.showToast(context, "Неправильна дата");  
+          } 
+          break; 
+      }
+      }
     else{
        FtoastController.showToast(context, "Заповніть поле"); 
     }
@@ -235,17 +264,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть пошту",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                  fontWeight: FontWeight.w800)),
                             ));
       case 1: return Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -272,17 +301,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть код, відправлений на пошту",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                  fontWeight: FontWeight.w800)),
                             ));
       case 2: return Column(mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget> [
@@ -311,17 +340,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть пароль",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                  fontWeight: FontWeight.w800)),
                             )),
           Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -348,17 +377,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Підтвердіть пароль",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                    fontWeight: FontWeight.w800)),
                             ))]);  
       case 3: return Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -385,17 +414,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть номер телефону",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                    fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                    fontWeight: FontWeight.w800)),
                             ));                 
       case 4: return Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -422,17 +451,17 @@ class _RegisterState extends State<RegisterPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть ваше ім'я",
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                    fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: additionalColor,
+                                    fontWeight: FontWeight.w800)),
                             ));
       
       case 5: return Container(
@@ -443,13 +472,11 @@ class _RegisterState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                              Text("Введіть дату народження",style: GoogleFonts.montserrat(
-                                    textStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400
-                                    ),
-                                  )),
+                              Text("Введіть дату народження",style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: additionalColor,
+                                  fontWeight: FontWeight.w800)),),
                           Container(
                             height: MediaQuery.of(context).size.height * 0.1,
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
@@ -470,11 +497,11 @@ class _RegisterState extends State<RegisterPage> {
                             alignment: Alignment.topCenter,
                             child: Text(
                               "Cталася помилка",
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
+                                    fontSize: 24,
+                                    color: additionalColor,
+                                  fontWeight: FontWeight.w800)),
                             ));
     }
   }

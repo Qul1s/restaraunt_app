@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -20,22 +23,59 @@ class ProfilePage extends StatefulWidget{
 
   Color additionalColor = const Color.fromRGBO(248, 248, 248, 1);
   Color textColor = const Color.fromRGBO(68, 68,68, 1);
-  bool login = true;
 
   class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin{
+  dynamic ordersQuery = '';
+  late Animation animationOfAllSum;
+  late Animation animationOfBonusSum;
+  late Animation animationOfQuantity;
+  late AnimationController animationController;
+  int ordered = 0;
+  int bonus = 0;
+  int paid = 0;
 
     @override
     void initState(){
+      getData();
+      getLogin();
       super.initState();
     }
+
+  bool login = false;
+
+  void getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      login = prefs.getBool('login') ?? false;
+    });
+  }
+
+
+  void getData() async{
+    final prefs = await SharedPreferences.getInstance();
+    var userId = (prefs.getString('userId') ?? '');
+   
+    final ref = FirebaseDatabase.instance.ref('Users/$userId');
+      Stream<DatabaseEvent> stream = ref.onValue;
+      stream.listen((DatabaseEvent event){
+        setState(() {
+          var orderedQuery = jsonDecode(jsonEncode(event.snapshot.value)) as Map<String, dynamic>;
+          ordered = orderedQuery["ordered"];
+          bonus = orderedQuery["bonus"];
+          paid =  orderedQuery["paid"];
+        });
+      });
+    }
+    
+
 
 
     @override
     Widget build(BuildContext context) {
-      AnimationController animationController = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
-      Animation animationOfAllSum = IntTween(begin: 0, end: 1760).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
-      Animation animationOfBonusSum = IntTween(begin: 0, end: 200).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
-      Animation animationOfQuantity = IntTween(begin: 0, end: 2).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+      animationController = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
+      animationOfAllSum = IntTween(begin: 0, end: paid).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+      animationOfBonusSum = IntTween(begin: 0, end: bonus).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
+      animationOfQuantity = IntTween(begin: 0, end: ordered).animate(CurvedAnimation(parent: animationController, curve: Curves.easeOut));
       animationController.forward();
       if(!login){
       return GestureDetector( 
@@ -51,7 +91,7 @@ class ProfilePage extends StatefulWidget{
                                           width: MediaQuery.of(context).size.width* 0.8,
                                           height: MediaQuery.of(context).size.height* 0.3
                                           ),
-                                        AutoSizeText("Щоб побачити свої замовлення, увійдіть в акаунт",
+                                        AutoSizeText("Щоб побачити свій профіль, увійдіть в акаунт",
                                             style: GoogleFonts.poiretOne(
                                                                           textStyle: TextStyle(
                                                                           color: textColor,
@@ -121,29 +161,22 @@ class ProfilePage extends StatefulWidget{
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            border: Border.all(color: const Color.fromRGBO(90, 90, 90, 1), width: 1), borderRadius: const BorderRadius.all(Radius.circular(100)),),
-                          height: MediaQuery.of(context).size.height*0.13,
-                          width: MediaQuery.of(context).size.height*0.13,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(100)),
-                            child: Image.asset("images/logo.jpg",
-                              height: MediaQuery.of(context).size.height*0.13,
-                              width: MediaQuery.of(context).size.height*0.13, fit: BoxFit.contain,)
-                          )),
+                          decoration: const BoxDecoration(
+                            //color: Colors.black,
+                            //border: Border.all(color: const Color.fromRGBO(90, 90, 90, 1), width: 1), borderRadius: const BorderRadius.all(Radius.circular(100)),
+                            ),
+                          //height: MediaQuery.of(context).size.height*0.13,
+                          //width: MediaQuery.of(context).size.height*0.13,
+                          // child: ClipRRect(
+                          //   borderRadius: const BorderRadius.all(Radius.circular(100)),
+                           child: Image.asset("images/logo.jpg",
+                              height: MediaQuery.of(context).size.height*0.115,
+                              width: MediaQuery.of(context).size.height*0.115, fit: BoxFit.contain,)
+                        ),
+                          //),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Container(
-                              alignment: Alignment.center,
-                              child: Text("Антон Ретюнських", style: GoogleFonts.rubik(
-                                                  textStyle: const TextStyle(
-                                                    color: Color.fromRGBO(60, 60, 60, 1),
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w500
-                                        ),
-                                      ),)),
                             Container(
                               width: MediaQuery.of(context).size.width*0.8,
                               height: MediaQuery.of(context).size.height*0.0005,
@@ -221,31 +254,6 @@ class ProfilePage extends StatefulWidget{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.center,
-                                      height: MediaQuery.of(context).size.width*0.1,
-                                      width: MediaQuery.of(context).size.width*0.1,
-                                      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),
-                                                            color: Color.fromRGBO(230, 230, 230, 1),),
-                                      child: const Icon(Icons.settings, size: 25, color: Colors.black),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width*0.5,
-                                      child: Text("Налаштування", style: GoogleFonts.rubik(
-                                              textStyle: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500
-                                              )))),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width*0.1,
-                                      child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
                                  GestureDetector(
                                   onTap: () => Navigator.push( context,
                                       AwesomePageRoute(
@@ -340,6 +348,31 @@ class ProfilePage extends StatefulWidget{
                                         ),
                                       ],
                                     )),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      height: MediaQuery.of(context).size.width*0.1,
+                                      width: MediaQuery.of(context).size.width*0.1,
+                                      decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                            color: Color.fromRGBO(230, 230, 230, 1),),
+                                      child: const Icon(Icons.app_registration_rounded, size: 25, color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width*0.5,
+                                      child: Text("Про додаток", style: GoogleFonts.rubik(
+                                              textStyle: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500
+                                              )))),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width*0.1,
+                                      child: const Icon(Icons.arrow_forward_ios_rounded, size: 20, color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                                 GestureDetector(
                                   onTap:() {
                                     Navigator.push( context,

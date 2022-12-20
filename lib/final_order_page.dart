@@ -1,4 +1,6 @@
 import 'dart:convert';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/authentication.dart';
+import 'package:restaraunt_app/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
 import 'package:time_picker_sheet/widget/sheet.dart';
@@ -15,6 +18,7 @@ import 'package:time_picker_sheet/widget/time_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import 'dashboard_page.dart';
+import 'login_page.dart';
 import 'order.dart';
 
 
@@ -46,6 +50,7 @@ import 'order.dart';
     String street = '';
     bool payment = false;
     bool isFinished = false;
+    int countOfcutlery = 1;
 
     dynamic time = DateTime.now().toLocal();
     int hour = DateTime.now().toLocal().hour;
@@ -54,6 +59,7 @@ import 'order.dart';
 
   @override
   void initState() {
+    getLogin();
     getData();
     super.initState();
   }
@@ -81,11 +87,89 @@ import 'order.dart';
         });
       });
   }
+
+  bool login = false;
+
+  void getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      login = prefs.getBool('login') ?? false;
+    });
+  }
     
 
 
    @override
     Widget build(BuildContext context) {
+      if(!login){
+      return GestureDetector( 
+          child: Scaffold(
+            backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
+                  body: Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Lottie.asset('lottie/not_login.json',
+                                          width: MediaQuery.of(context).size.width* 0.8,
+                                          height: MediaQuery.of(context).size.height* 0.3
+                                          ),
+                                        AutoSizeText("Щоб побачити свої замовлення, увійдіть в акаунт",
+                                            style: GoogleFonts.poiretOne(
+                                                                          textStyle: const TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontSize: 20,
+                                                                          fontWeight: FontWeight.w800)),
+                                            minFontSize: 12,
+                                            stepGranularity: 2,
+                                            textAlign: TextAlign.center), 
+                                        GestureDetector(
+                                          onTap: (() {
+                                            Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const LoginPage(),
+                                                transition: StackTransition(),
+                                              ));
+                                          }),
+                                          child:
+                                          Container(alignment: Alignment.center,
+                                            height: MediaQuery.of(context).size.height*0.07,
+                                            width: MediaQuery.of(context).size.width*0.8,
+                                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                          color: const Color.fromRGBO(254, 182, 102, 1)),
+                                            child: Text("Увійти", 
+                                                    textAlign: TextAlign.center,
+                                                    style: GoogleFonts.poiretOne(
+                                                                          textStyle: const TextStyle(
+                                                                          color: Color.fromRGBO(240, 240, 240, 1),
+                                                                          fontSize: 22,
+                                                                          fontWeight: FontWeight.w800)),),  
+                                                                      )),
+                                        GestureDetector(
+                                          onTap: () => Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              )),
+                                          child: Container(alignment: Alignment.center,
+                                                  height: MediaQuery.of(context).size.height * 0.03,
+                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
+                                                  child: Text("Немає акаунту? Зареєструватись", 
+                                                  style: GoogleFonts.poiretOne(
+                                                                          textStyle: const TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontSize: 16,
+                                                                          fontWeight: FontWeight.w800,
+                                                                          decoration: TextDecoration.underline,
+                                                                          decorationColor: Colors.black,)))
+                                        )),   
+                                                        ]))
+          ));}
+          else{
       return GestureDetector( 
           onTap: unfocus,
           child: Scaffold(
@@ -109,7 +193,7 @@ import 'order.dart';
                             Container(
                               alignment: Alignment.center,
                               margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.23,
-                                                      top: MediaQuery.of(context).size.height* 0.02),
+                                                      top: MediaQuery.of(context).size.height* 0.04),
                               width: MediaQuery.of(context).size.width* 0.5,
                               height: MediaQuery.of(context).size.height* 0.04,
                               child: AutoSizeText("Ваше замовлення", 
@@ -118,7 +202,7 @@ import 'order.dart';
                                 style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 16,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w500)))
                                       ),
                             GestureDetector(
@@ -140,7 +224,7 @@ import 'order.dart';
                                   ],
                                 ),
                                 margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.09,
-                                                        top: MediaQuery.of(context).size.height* 0.02),
+                                                        top: MediaQuery.of(context).size.height* 0.04),
                                 width: MediaQuery.of(context).size.width* 0.1,
                                 height: MediaQuery.of(context).size.width* 0.1,
                                 child: const Icon(Icons.close_rounded, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
@@ -235,39 +319,49 @@ import 'order.dart';
                                       color: Colors.black,
                                       fontSize: 20,
                                        fontWeight: FontWeight.w800))),
-                                ToggleSwitch(
-                                  minWidth: MediaQuery.of(context).size.width* 0.3,
-                                  minHeight: MediaQuery.of(context).size.height* 0.05,
-                                  fontSize: 16,
-                                  cornerRadius: 15,
-                                  animate: true,
-                                  curve: Curves.fastOutSlowIn,
-                                  animationDuration: 500,
-                                  initialLabelIndex: initialIndex,
-                                  activeBgColor: const [ Color.fromRGBO(254, 182, 102, 1)],
-                                  activeFgColor: Colors.white,
-                                  inactiveBgColor: const Color.fromRGBO(200, 200, 200, 1),
-                                  inactiveFgColor: Colors.black,
-                                  totalSwitches: 2,
-                                  customTextStyles: [GoogleFonts.poiretOne(
-                                      textStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600))],
-                                  labels: const ['Доставка', 'Самовивіз'],
-                                  onToggle: (index) {
-                                    setState(() {
-                                      initialIndex = index!;
-                                      delivery = !delivery;
-                                    });
-                                  },
-                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 5), ),
+                                    ]),
+                                  child: ToggleSwitch(
+                                    minWidth: MediaQuery.of(context).size.width* 0.3,
+                                    minHeight: MediaQuery.of(context).size.height* 0.05,
+                                    fontSize: 16,
+                                    cornerRadius: 15,
+                                    animate: true,
+                                    curve: Curves.fastOutSlowIn,
+                                    animationDuration: 500,
+                                    initialLabelIndex: initialIndex,
+                                    activeBgColor: const [ Color.fromRGBO(254, 182, 102, 1)],
+                                    activeFgColor: Colors.white,
+                                    inactiveBgColor: const Color.fromRGBO(200, 200, 200, 1),
+                                    inactiveFgColor: Colors.black,
+                                    totalSwitches: 2,
+                                    customTextStyles: [GoogleFonts.poiretOne(
+                                        textStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600))],
+                                    labels: const ['Доставка', 'Самовивіз'],
+                                    onToggle: (index) {
+                                      setState(() {
+                                        initialIndex = index!;
+                                        delivery = !delivery;
+                                      });
+                                    },
+                                )),
                               ],
                             )
                           ),
                           infoArea()
                           ],)), 
-            ])));
+            ])));}
     }
 
     Widget infoArea(){
@@ -298,7 +392,7 @@ import 'order.dart';
       else{
         if(delivery){
           return Container(
-            height: MediaQuery.of(context).size.height*0.5,
+            height: MediaQuery.of(context).size.height*0.48,
               width: MediaQuery.of(context).size.width* 0.9,
               alignment: Alignment.center,
               child: Column(
@@ -306,33 +400,53 @@ import 'order.dart';
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                 Text("Адреса доставки",
-                     style: GoogleFonts.poiretOne(
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
                               GestureDetector( 
                   onTap: () {
                     openAddressSheet();
                   },
                   child: Container(
+                                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                           padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
                                                                   right: MediaQuery.of(context).size.width* 0.05),
                                           width: MediaQuery.of(context).size.width* 0.9,
                                           height: MediaQuery.of(context).size.width* 0.17,
                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                                                color: const Color.fromRGBO(255, 255, 255, 1)),
+                                                                color: const Color.fromRGBO(255, 255, 255, 1),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Colors.grey.withOpacity(0.5),
+                                                                    spreadRadius: 2,
+                                                                    blurRadius: 5,
+                                                                    offset: const Offset(0, 5), 
+                                                                  ),
+                                                                ]),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text("$street, ${address["building"]}", 
-                                                textAlign: TextAlign.center,
-                                                  style: GoogleFonts.poiretOne(
-                                                        textStyle: const TextStyle(
-                                                        color: Color.fromRGBO(31, 31, 47, 1),
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.w800))),
+                                              Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("${address["name"]}", 
+                                              textAlign: TextAlign.center,
+                                                style: GoogleFonts.nunito(
+                                                      textStyle: const TextStyle(
+                                                      color: Color.fromRGBO(31, 31, 47, 1),
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w800))),
+                                            Text("${address["street"]}, ${address["building"]}", 
+                                              textAlign: TextAlign.center,
+                                                style: GoogleFonts.poiretOne(
+                                                      textStyle: const TextStyle(
+                                                      color: Color.fromRGBO(31, 31, 47, 1),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w800))),
+                                            ],),
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
@@ -363,45 +477,137 @@ import 'order.dart';
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    Text("Час доставки",
-                     style: GoogleFonts.poiretOne(
+                    Text("Кількість приборів",
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
-                    TextButton(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                     Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                      width: MediaQuery.of(context).size.width* 0.2,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                if(countOfcutlery!=0){
+                                  countOfcutlery-=1;
+                                }
+                              });
+                           },
+                            child: const Text("-",
+                              style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal))),
+                          Text("$countOfcutlery",
+                            style: GoogleFonts.poiretOne(
+                              textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800))),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() { 
+                                if(countOfcutlery!=10){
+                                  countOfcutlery+=1;
+                                } 
+                              });
+                            },
+                            child: const Text("+",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal))),
+                            ]))]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Text("Час доставки",
+                     style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                    Container(
+                      width: MediaQuery.of(context).size.width* 0.2,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: TextButton(
                       onPressed: () {
                           openTimeSheet();
                     },
                     child: Text(getTimeText(),
                         style: GoogleFonts.poiretOne(
                                 textStyle: const TextStyle(
-                                color: Color.fromRGBO(254, 182, 102, 1),
-                                fontSize: 20,
+                                color: Colors.white,
+                                fontSize: 16,
+                                //decoration: TextDecoration.underline,
                                 fontWeight: FontWeight.w800))
-                    ))]),
+                    )))]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     Text("Спосіб оплати",
-                     style: GoogleFonts.poiretOne(
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
-                    TextButton(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                    Container(
+                      width: MediaQuery.of(context).size.width* 0.25,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: TextButton(
                       onPressed: () {
                           openMoneySheet();
                       },
                       child: Text(getPaymentText(),
                           style: GoogleFonts.poiretOne(
                                   textStyle: const TextStyle(
-                                  color: Color.fromRGBO(254, 182, 102, 1),
-                                  fontSize: 22,
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                  //decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.w800),
                                   )
-                    ))]),
+                    )))]),
                   Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                     decoration: DottedDecoration(shape: Shape.line, linePosition: LinePosition.top),
                     child:
                   Column(
@@ -412,22 +618,22 @@ import 'order.dart';
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Сума:", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Row(
@@ -441,7 +647,7 @@ import 'order.dart';
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
@@ -450,7 +656,7 @@ import 'order.dart';
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Row(
@@ -458,26 +664,26 @@ import 'order.dart';
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Разом:", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 26,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()+40}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                           child: SwipeableButtonView(
                           buttonText: 'Замовити',
                           buttontextstyle: GoogleFonts.poiretOne(
@@ -498,7 +704,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
-                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], street, sumOfElements(), OrderList.order, getTimeText(), getPaymentText());
+                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements()+40, OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
@@ -515,7 +721,7 @@ import 'order.dart';
       }
       else{
         return Container(
-            height: MediaQuery.of(context).size.height*0.5,
+            height: MediaQuery.of(context).size.height*0.48,
               width: MediaQuery.of(context).size.width* 0.9,
               alignment: Alignment.center,
               child: Column(
@@ -523,11 +729,11 @@ import 'order.dart';
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                 Text("Адреса самовивозу",
-                     style: GoogleFonts.poiretOne(
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
                Container(
                                           padding: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
                                                                   right: MediaQuery.of(context).size.width* 0.05),
@@ -551,44 +757,134 @@ import 'order.dart';
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    Text("Час самовивозу",
-                     style: GoogleFonts.poiretOne(
+                    Text("Кількість приборів",
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
-                    TextButton(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                     Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                      width: MediaQuery.of(context).size.width* 0.2,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const  Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              setState(() {
+                                if(countOfcutlery!=0){
+                                  countOfcutlery-=1;
+                                }
+                              });
+                           },
+                            child: const Text("-",
+                              style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal))),
+                          Text("$countOfcutlery",
+                            style: GoogleFonts.poiretOne(
+                              textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800))),
+                          GestureDetector(
+                            onTap: (){
+                              setState(() { 
+                                if(countOfcutlery!=10){
+                                  countOfcutlery+=1;
+                                } 
+                              });
+                            },
+                            child: const Text("+",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.normal))),
+                            ]))]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Text("Час самовивозу",
+                     style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                    Container(
+                      width: MediaQuery.of(context).size.width* 0.2,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: TextButton(
                       onPressed: () {
                           openTimeSheet();
                     },
                     child: Text(getTimeText(),
                         style: GoogleFonts.poiretOne(
                                 textStyle: const TextStyle(
-                                color: Color.fromRGBO(254, 182, 102, 1),
-                                fontSize: 20,
+                                color: Colors.white,
+                                fontSize: 16,
+                                //decoration: TextDecoration.underline,
                                 fontWeight: FontWeight.w800))
-                    ))]),
+                    )))]),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                     Text("Спосіб оплати",
-                     style: GoogleFonts.poiretOne(
+                     style: GoogleFonts.montserrat(
                       textStyle: const TextStyle(
                       color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800))),
-                    TextButton(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
+                    Container(
+                      width: MediaQuery.of(context).size.width* 0.25,
+                      height: MediaQuery.of(context).size.height* 0.04,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(254, 182, 102, 1),
+                        borderRadius: const BorderRadius.all(Radius.circular(15),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 5), ),
+                           ]
+                      ),
+                      child: TextButton(
                       onPressed: () {
                           openMoneySheet();
-                      },
-                      child: Text(getPaymentText(),
-                          style: GoogleFonts.poiretOne(
-                                  textStyle: const TextStyle(
-                                  color: Color.fromRGBO(254, 182, 102, 1),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w800),
-                                  )
-                    ))]),
+                    },
+                    child: Text(getPaymentText(),
+                        style: GoogleFonts.poiretOne(
+                                textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                //decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.w800))
+                    )))]),
                   Container(
                     decoration: DottedDecoration(shape: Shape.line, linePosition: LinePosition.top),
                     child:
@@ -600,22 +896,22 @@ import 'order.dart';
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Сума:", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Row(
@@ -629,7 +925,7 @@ import 'order.dart';
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
@@ -638,7 +934,7 @@ import 'order.dart';
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Row(
@@ -646,26 +942,26 @@ import 'order.dart';
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Разом:", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poiretOne(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 26,
+                                      fontSize: 24,
                                       fontWeight: FontWeight.w800)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w600))),                                ),
                         ],),
                         Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                           child: SwipeableButtonView(
                           buttonText: 'Замовити',
                           buttontextstyle: GoogleFonts.poiretOne(
@@ -686,7 +982,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
-                             addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], street, sumOfElements(), OrderList.order, getTimeText(), getPaymentText());
+                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements(), OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
@@ -716,7 +1012,7 @@ import 'order.dart';
           return "Готівка";
       }
       else{
-        return "Картою";
+        return "Карткою";
       }
     }
 
@@ -768,13 +1064,24 @@ import 'order.dart';
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text("$streetTemp, ${addressTemp["building"]}", 
+                                            Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("${addressTemp["name"]}", 
                                               textAlign: TextAlign.center,
-                                                style: GoogleFonts.poiretOne(
+                                                style: GoogleFonts.nunito(
                                                       textStyle: const TextStyle(
                                                       color: Color.fromRGBO(31, 31, 47, 1),
                                                       fontSize: 18,
                                                       fontWeight: FontWeight.w800))),
+                                            Text("${addressTemp["street"]}, ${addressTemp["building"]}",
+                                              textAlign: TextAlign.center,
+                                                style: GoogleFonts.poiretOne(
+                                                      textStyle: const TextStyle(
+                                                      color: Color.fromRGBO(31, 31, 47, 1),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w800))),
+                                            ],),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
@@ -836,7 +1143,7 @@ import 'order.dart';
                                     color: Colors.black,
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600))],
-                                labels: const ["Готівка", "Картою"],
+                                labels: const ["Готівка", "Карткою"],
                                 onToggle: (index) {
                                   setState(() {
                                     secondInitialIndex = index!;

@@ -2,6 +2,7 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:restaraunt_app/authentication.dart';
 import 'package:restaraunt_app/login_page.dart';
 import 'error_text.dart';
@@ -52,16 +53,30 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
                         left: MediaQuery.of(context).size.width * 0.07,
                         right: MediaQuery.of(context).size.width * 0.07),
             child: Column(mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     GestureDetector( 
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }, 
-                          child:Container(
-                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
-                            alignment: Alignment.topLeft,
-                            child: Icon(Icons.arrow_back_outlined, size: 45, color: additionalColor)
+                          GestureDetector(
+                            onTap:() {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(252, 252, 252, 1),
+                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 5), 
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.04),
+                              width: MediaQuery.of(context).size.width* 0.1,
+                              height: MediaQuery.of(context).size.width* 0.1,
+                              child: const Icon(Icons.arrow_back_outlined, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                           )),
                       Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -88,36 +103,37 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: "Введіть пошту",
-                                labelStyle: TextStyle(
-                                    fontSize: 16,
-                                    color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                labelStyle:  GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: additionalColor,
+                                                                            fontSize: 16,
+                                                                            fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style:  GoogleFonts.poiretOne(
+                                                                            textStyle: TextStyle(
+                                                                            color: additionalColor,
+                                                                            fontSize: 16,
+                                                                            fontWeight: FontWeight.w800)),
                             )),
-                      GestureDetector( child: Container(alignment: Alignment.center,
-                                height: MediaQuery.of(context).size.height*0.08,
-                                width: MediaQuery.of(context).size.width*0.9,
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                            color: mainColor),
-                                child: Text("Відновити", 
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                              color: additionalColor,
-                                              fontSize: 24,
-                                              fontFamily: "uaBrand",
-                                              fontWeight: FontWeight.w400
-                                              )),  
-                                                        ),
-                              onTap: (){
-                                buttonAction();
-                              },),]),
+                      Container( 
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width*0.9,
+                        child: GestureDetector(
+                          onTap: () => buttonAction(),
+                          child: Container(alignment: Alignment.center,
+                                              height: MediaQuery.of(context).size.height*0.07,
+                                              width: MediaQuery.of(context).size.width*0.8,
+                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                            color: const Color.fromRGBO(254, 182, 102, 1)),
+                                              child: Text("Відновити", 
+                                                      textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                                            textStyle: const TextStyle(
+                                                                            color: Color.fromRGBO(240, 240, 240, 1),
+                                                                            fontSize: 22,
+                                                                            fontWeight: FontWeight.w800)),),  
+                                                                        ))),]),
             ),
       ),
     ));

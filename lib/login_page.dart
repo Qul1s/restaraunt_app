@@ -1,9 +1,11 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:restaraunt_app/ftoast_controller.dart';
 import 'package:restaraunt_app/main_screen.dart';
-import 'package:restaraunt_app/social_login_button.dart';
+import 'package:restaraunt_app/register_page.dart';
+import 'package:restaraunt_app/reset_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'authentication.dart';
@@ -51,16 +53,30 @@ class _LoginState extends State<LoginPage> {
                         left: MediaQuery.of(context).size.width * 0.07,
                         right: MediaQuery.of(context).size.width * 0.07),
             child: Column(mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        GestureDetector( 
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }, 
-                          child:Container(
-                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.07),
-                            alignment: Alignment.topLeft,
-                            child: Icon(Icons.arrow_back_outlined, size: 45, color: additionalColor)
+                         GestureDetector(
+                            onTap:() {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(252, 252, 252, 1),
+                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 5), 
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.04),
+                              width: MediaQuery.of(context).size.width* 0.1,
+                              height: MediaQuery.of(context).size.width* 0.1,
+                              child: const Icon(Icons.arrow_back_outlined, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                           )),
                       Container(
                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.2),
@@ -87,17 +103,17 @@ class _LoginState extends State<LoginPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: 'Введіть пошту',
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
+                              style: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
                                   fontSize: 16,
                                   color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                             )),
                       Container(
                             height: MediaQuery.of(context).size.height * 0.1,
@@ -121,66 +137,71 @@ class _LoginState extends State<LoginPage> {
                                     borderSide:
                                         BorderSide(color: additionalColor, width: 3)),
                                 labelText: 'Введіть пароль',
-                                labelStyle: TextStyle(
+                                labelStyle: GoogleFonts.poiretOne(
+                                    textStyle: TextStyle(
                                     fontSize: 16,
                                     color: additionalColor,
-                                    fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w800)),
                               ),
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: additionalColor,
-                                  fontFamily: "uaBrand",
-                                  fontWeight: FontWeight.w400),
+                              style: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
+                                            fontSize: 16,
+                                            color: additionalColor,
+                                            fontWeight: FontWeight.w400)),
                               textAlign: TextAlign.left,
                             )),
-                      Container(alignment: Alignment.centerRight,
+                      GestureDetector(
+                        onTap: () => buttonResetAction(),
+                        child: Container(alignment: Alignment.centerRight,
                                 height: MediaQuery.of(context).size.height * 0.03,
                                 child: Text("Забули пароль?", 
-                                          style: TextStyle(
+                                          style: GoogleFonts.poiretOne(
+                                          textStyle: TextStyle(
                                             color: additionalColor,
                                             fontSize: 16,
-                                            fontFamily: "uaBrand",
-                                            fontWeight: FontWeight.w300,
+                                            fontWeight: FontWeight.w800,
                                             decoration: TextDecoration.underline,
                                             decorationColor: additionalColor,
-                                          ))
+                                          ))))
                                 ),
-                      GestureDetector(
-                        onTap: () => buttonAction(),
-                        child:Container(alignment: Alignment.center,
-                                height: MediaQuery.of(context).size.height*0.08,
-                                width: MediaQuery.of(context).size.width*0.9,
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
-                                            color: mainColor),
-                                child: const Text("Увійти",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22,
-                                              fontFamily: "uaBrand",
-                                              fontWeight: FontWeight.w400
-                                              )),  
-                                                        ),),                             
-                      Container(  
-                                  alignment: Alignment.centerLeft,
-                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
-                                  height: MediaQuery.of(context).size.height*0.07,
-                                  width: MediaQuery.of(context).size.width*0.9,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const LoginWithContainer(type: SocialLoginButtonType.google),
-                                      Container(
-                                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.03),
-                                        child: const LoginWithContainer(type: SocialLoginButtonType.apple)),
-                                      Container(
-                                        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.03),
-                                        child: const LoginWithContainer(type: SocialLoginButtonType.facebook)),
-                                      ]
-                                    ),
-                          ),
+                      Container( 
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width*0.9,
+                        child: GestureDetector(
+                          onTap: () => buttonLoginAction(),
+                          child: Container(alignment: Alignment.center,
+                                              height: MediaQuery.of(context).size.height*0.07,
+                                              width: MediaQuery.of(context).size.width*0.8,
+                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
+                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), 
+                                                            color: const Color.fromRGBO(254, 182, 102, 1)),
+                                              child: Text("Увійти", 
+                                                      textAlign: TextAlign.center,
+                                                      style: GoogleFonts.poiretOne(
+                                                                            textStyle: const TextStyle(
+                                                                            color: Color.fromRGBO(240, 240, 240, 1),
+                                                                            fontSize: 22,
+                                                                            fontWeight: FontWeight.w800)),),  
+                                                                        ))),                            
+                     GestureDetector(
+                                          onTap: () => Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              )),
+                                          child: Container(alignment: Alignment.center,
+                                                  height: MediaQuery.of(context).size.height * 0.03,
+                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
+                                                  child: Text("Немає акаунту? Зареєструватись", 
+                                                  style: GoogleFonts.poiretOne(
+                                                                          textStyle: const TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontSize: 16,
+                                                                          fontWeight: FontWeight.w800,
+                                                                          decoration: TextDecoration.underline,
+                                                                          decorationColor: Colors.black,)))
+                                        )),
                 ]),
             ),
           ],
@@ -189,24 +210,41 @@ class _LoginState extends State<LoginPage> {
     ));
   }
 
-
-void buttonAction(){
-   if (emailController.value.text.isNotEmpty) {
-      if (passwordController.value.text.isNotEmpty) {
-          bool result = loginUser(emailController.text, passwordController.text);
-          if (result == true) {
-            Navigator.push( context,
+void buttonResetAction(){
+   Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
                                                 exitPage: widget,
-                                                enterPage: const MainScreen(),
+                                                enterPage: const ResetPasswordPage(),
                                                 transition: StackTransition(),
                                               ));
-            _setLogin(true);
-          } 
-          else {
-            FtoastController.showToast(context, "Помилка входу");
-          }  
+}
+
+void buttonRegisterAction(){
+  Navigator.push( context,
+                                              AwesomePageRoute(
+                                                transitionDuration: const Duration(milliseconds: 600),
+                                                exitPage: widget,
+                                                enterPage: const RegisterPage(),
+                                                transition: StackTransition(),
+                                              ));
+}
+
+void buttonLoginAction(){
+   if (emailController.value.text.isNotEmpty) {
+      if (passwordController.value.text.isNotEmpty) {
+          AuthenticationServices auth = AuthenticationServices();
+              auth.loginUser(emailController.text, passwordController.text, context).then((value){
+              if (value) {
+                Navigator.push( context,
+                  AwesomePageRoute(
+                    transitionDuration: const Duration(milliseconds: 600),
+                    exitPage: widget,
+                    enterPage: const MainScreen(),
+                    transition: StackTransition()));
+              _setLogin(true);
+              }
+              }); 
           }
         else{
           FtoastController.showToast(context, "Введіть пароль");

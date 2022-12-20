@@ -90,7 +90,7 @@ import 'package:url_launcher/url_launcher.dart';
                           Container(
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.23,
-                                                    top: MediaQuery.of(context).size.height* 0.02),
+                                                    top: MediaQuery.of(context).size.height* 0.04),
                             width: MediaQuery.of(context).size.width* 0.5,
                             height: MediaQuery.of(context).size.height* 0.04,
                             child: AutoSizeText("Замовлення №${order["number"]}", 
@@ -121,14 +121,14 @@ import 'package:url_launcher/url_launcher.dart';
                                 ],
                               ),
                               margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.09,
-                                                      top: MediaQuery.of(context).size.height* 0.02),
+                                                      top: MediaQuery.of(context).size.height* 0.04),
                               width: MediaQuery.of(context).size.width* 0.1,
                               height: MediaQuery.of(context).size.width* 0.1,
                               child: const Icon(Icons.close_rounded, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
                         ))
                         ],),
                           SizedBox(
-                              height: MediaQuery.of(context).size.height*0.43,
+                              height: MediaQuery.of(context).size.height*0.41,
                               width: MediaQuery.of(context).size.width* 0.9,
                               child: FirebaseDatabaseQueryBuilder(
                                   query: dishesQuery,

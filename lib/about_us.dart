@@ -78,18 +78,6 @@ class AboutUsPage extends StatefulWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.23,
-                                                    top: MediaQuery.of(context).size.height* 0.04),
-                            width: MediaQuery.of(context).size.width* 0.5,
-                            height: MediaQuery.of(context).size.height* 0.04,
-                            child: Text("Про нас", 
-                              style: GoogleFonts.montserrat(
-                                    textStyle: const TextStyle(
-                                    color: Color.fromRGBO(31, 31, 47, 1),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w500)))),
                           GestureDetector(
                             onTap:() {
                               Navigator.pop(context);
@@ -108,12 +96,25 @@ class AboutUsPage extends StatefulWidget {
                                   ),
                                 ],
                               ),
-                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.09,
+                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.05,
                                                       top: MediaQuery.of(context).size.height* 0.04),
                               width: MediaQuery.of(context).size.width* 0.1,
                               height: MediaQuery.of(context).size.width* 0.1,
-                              child: const Icon(Icons.close_rounded, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
-                        ))
+                              child: const Icon(Icons.arrow_back_outlined, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
+                          )),
+                           Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.12,
+                                                    top: MediaQuery.of(context).size.height* 0.04),
+                            width: MediaQuery.of(context).size.width* 0.5,
+                            height: MediaQuery.of(context).size.height* 0.04,
+                            child: AutoSizeText("Про нас", 
+                            textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.w600)))),
                         ],),
               Container(
                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),

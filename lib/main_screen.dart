@@ -1,4 +1,5 @@
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:flutter/material.dart';
@@ -333,7 +334,8 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                             onTap: (() {
-                                            if(OrderList.order != []){
+                                            if(OrderList.order.isNotEmpty){
+                                              print(OrderList.order);
                                               Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),

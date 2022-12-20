@@ -26,19 +26,31 @@ import 'register_page.dart';
     Color additionalColor = const Color.fromRGBO(248, 248, 248, 1);
     Color textColor = const Color.fromRGBO(68, 68,68, 1);
 
-    bool login = true;
     dynamic ordersQuery = FirebaseDatabase.instance.ref('Orders');
+    
+    String userId = "";
 
     @override
     void initState() {
+      getLogin();
       getData();
       super.initState();
     }
 
+    bool login = false;
+
+  void getLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      login = prefs.getBool('login') ?? false;
+    });
+  }
+
+
     void getData() async{
       final prefs = await SharedPreferences.getInstance();
       setState(() {
-        var userId = (prefs.getString('userId') ?? '');
+        userId = (prefs.getString('userId') ?? '');
         ordersQuery = FirebaseDatabase.instance.ref('Orders').orderByChild("userId").equalTo(userId);
       });
     }
@@ -77,7 +89,8 @@ import 'register_page.dart';
                                                 transition: StackTransition(),
                                               ));
                                           }),
-                                          child:Container(alignment: Alignment.center,
+                                          child:
+                                          Container(alignment: Alignment.center,
                                             height: MediaQuery.of(context).size.height*0.07,
                                             width: MediaQuery.of(context).size.width*0.8,
                                             margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04),
@@ -104,7 +117,7 @@ import 'register_page.dart';
                                                   child: Text("Немає акаунту? Зареєструватись", 
                                                   style: GoogleFonts.poiretOne(
                                                                           textStyle: TextStyle(
-                                                                          color: const Color.fromRGBO(240, 240, 240, 1),
+                                                                          color: textColor,
                                                                           fontSize: 16,
                                                                           fontWeight: FontWeight.w800,
                                                                           decoration: TextDecoration.underline,
@@ -147,65 +160,41 @@ import 'register_page.dart';
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                           Container(
                             alignment: Alignment.center,
-                            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.23,
-                                                    top: MediaQuery.of(context).size.height* 0.02),
+                            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
                             width: MediaQuery.of(context).size.width* 0.5,
                             height: MediaQuery.of(context).size.height* 0.04,
                             child: Text("Ваші замовлення", 
                               style: GoogleFonts.nunito(
                                     textStyle: const TextStyle(
                                     color: Color.fromRGBO(31, 31, 47, 1),
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w800)))),
-                          GestureDetector(
-                            onTap:() {
-                              //Navigator.pop(context);
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: const Color.fromRGBO(252, 252, 252, 1),
-                                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 1,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 5), 
-                                  ),
-                                ],
-                              ),
-                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width* 0.09,
-                                                      top: MediaQuery.of(context).size.height* 0.02),
-                              width: MediaQuery.of(context).size.width* 0.1,
-                              height: MediaQuery.of(context).size.width* 0.1,
-                              child: const Icon(Icons.filter_list, size: 30, color: Color.fromRGBO(31, 31, 47, 1),)
-                        ))
                         ],),
-                        Expanded(child: Container(
-                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.02),
-                          width: MediaQuery.of(context).size.width*0.9,
-                          child: FirebaseDatabaseQueryBuilder(
+                        Expanded(child: 
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width*0.9,
+                            child: FirebaseDatabaseQueryBuilder(
                                   query: ordersQuery,
                                   builder: (context, snapshot, _) { 
                                   return ListView.separated(
-                            clipBehavior: Clip.antiAlias,
-                            itemCount: snapshot.docs.length,
-                            separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.02),
-                            shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index){
-                                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                                  snapshot.fetchMore();
-                                  } 
-                                final order = jsonDecode(jsonEncode(snapshot.docs[index].value)) as Map<String, dynamic>;
-                                var indexTemp = snapshot.docs[index].key.toString();
-                                var dishesQuery = FirebaseDatabase.instance.ref('Orders/$indexTemp/dishes');
-                                return GestureDetector( 
+                              //reverse: getReversed(snapshot.docs.length),
+                              clipBehavior: Clip.antiAlias,
+                              itemCount: snapshot.docs.length,
+                              separatorBuilder: (BuildContext context, int index) => SizedBox(height: MediaQuery.of(context).size.height* 0.02),
+                                itemBuilder: (BuildContext context, int index){
+                                  if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                    snapshot.fetchMore();
+                                    } 
+                                  var newSnapshot = snapshot.docs.reversed.toList();
+                                  final order = jsonDecode(jsonEncode(newSnapshot[index].value)) as Map<String, dynamic>;
+                                  var indexTemp = newSnapshot[index].key.toString();
+                                  var dishesQuery = FirebaseDatabase.instance.ref('Orders/$indexTemp/dishes');
+                                  return GestureDetector( 
                                           onTap: () {
                                             Navigator.push( context,
                                               AwesomePageRoute(
@@ -345,6 +334,13 @@ import 'register_page.dart';
           }
   }
 
+  bool getReversed(length){
+    if(length < 2) {
+      return false;
+    }
+    return true;
+}
+
   Widget statusContainer(String status){
     if(status == 'Виконаний'){
       return Container(
@@ -410,5 +406,6 @@ import 'register_page.dart';
                                           ],));
     }
   }
+
 }
 

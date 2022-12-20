@@ -10,6 +10,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaraunt_app/authentication.dart';
 import 'package:restaraunt_app/final_order_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dishes.dart';
 import 'order.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -36,12 +37,7 @@ import 'package:flutterfire_ui/database.dart';
     final List<String> categoriesListImages = ["images/categories/all.png", "images/categories/soup.png", "images/categories/main.png" , "images/categories/bowl.png", "images/categories/dessert.png"];
     final List<Color> categoriesListColors = const [Color.fromRGBO(234,249,230, 1), Color.fromRGBO(230,237,250, 1), Color.fromRGBO(255,232,238,1),Color.fromRGBO(255, 255, 0, 0.2), Color.fromRGBO(0, 255, 255, 0.1)];
 
-
-
-
-    
-
-
+    final ScrollController _controller = ScrollController();
 
 void showDialogWindow(dish, context){
   int count = 1;
@@ -95,35 +91,7 @@ void showDialogWindow(dish, context){
                                                               padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.04,
                                                                               bottom: MediaQuery.of(context).size.height*0.01,
                                                                               right: MediaQuery.of(context).size.width*0.04,
-                                                                              left: MediaQuery.of(context).size.width*0.04),
-                                                              child:Row(
-                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap: (() async {
-                                                                                      setModalState(() => _visible = !_visible);
-                                                                                      await Future.delayed(const Duration(milliseconds: 200));
-                                                                                      setModalState(() => _visible = !_visible);
-                                                                                      if(Dish.favoriteList.contains(dish.name)){
-                                                                                        setModalState(() {
-                                                                                          Dish.favoriteList.remove(dish.name);
-                                                                                        });
-                                                                                      }
-                                                                                      else{
-                                                                                        setModalState(() {
-                                                                                          Dish.favoriteList.add(dish.name);
-                                                                                        }); 
-                                                                                      }
-                                                                                    }),
-                                                                    child: AnimatedOpacity(
-                                                                          opacity: _visible ? 1.0 : 0.0,
-                                                                          duration: const Duration(milliseconds: 250),
-                                                                          child: returnIcon(dish.name)),
-                                                                  )
-                                                                  
-                                                                ],
-                                                            ))
+                                                                              left: MediaQuery.of(context).size.width*0.04),)
                                                           ],),
                                                           Container(
                                                           padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.03,
@@ -290,13 +258,8 @@ FontWeight fontWeight(index){
       return FontWeight.w400;
     }
 }
-Future<void> _changeOpacity() async {
-    setState(() => _visible = !_visible);
-    await Future.delayed(const Duration(milliseconds: 250));
-    setState(() => _visible = !_visible);
-  }
-bool _visible = true;
-final ScrollController _controller = ScrollController();
+
+
 
 void _scrollTop() {
   _controller.animateTo(
@@ -367,10 +330,9 @@ void setUrl(){
   }
   break;
   }
-
-  
-  
 }
+
+
 
 Widget areaField(){
     double itemWidth = MediaQuery.of(context).size.width* 0.5;
@@ -481,18 +443,24 @@ Widget areaField(){
                                           child: Image.asset(dish["image"], 
                                                             fit: BoxFit.contain)),
                                         GestureDetector(
-                                          onTap: (() async {
-                                            _changeOpacity();
-                                            await Future.delayed(const Duration(milliseconds: 250));
+                                          onTap: ((){
                                             addToFavorite(name, dish["categories"], dish["image"], dish["name"],dish["price"]);
+                                            if(favouriteList.contains(name)){
+                                              setState(() {
+                                                favouriteList.remove(name);
+                                              });
+                                            }
+                                            else{
+                                              setState(() {
+                                                favouriteList.add(name);
+                                              });
+                                            }
                                           }),
-                                          child: AnimatedOpacity(
-                                                  opacity: _visible ? 1.0 : 0.0,
-                                                  duration: const Duration(milliseconds: 250),
-                                                  child:Container(
-                                            alignment: Alignment.topRight,
-                                            child: returnIcon(name)
-                                        )))                       
+                                            child: Container(
+                                                    alignment: Alignment.topRight,
+                                                    child: returnIcon(name)
+                                        )
+                                        )                       
                                       ],),
                                       Container(
                                         height: MediaQuery.of(context).size.height* 0.045,
@@ -529,7 +497,10 @@ Widget areaField(){
                                               fontWeight: FontWeight.bold))),
                                            GestureDetector(
                                             onTap: () {
-                                              OrderList.order.add(DishOrder(name: name, price: dish["price"], count: 1, image: dish["image"]));
+                                              var contain = OrderList.order.where((element) => element.name == name);
+                                                if (contain.isEmpty){
+                                                    OrderList.order.add(DishOrder(name: name, price: dish["price"], count: 1, image: dish["image"]));
+                                                  }
                                               ShowDialog(context);
                                             },
                                             child: Container(
@@ -562,24 +533,27 @@ Widget areaField(){
     }
   }
 
-    Icon returnIcon(name){
-      if(Dish.favoriteList.contains(name)){
+    Icon returnIcon(String name){ 
+      if(favouriteList.contains(name)){
           return const Icon(Icons.favorite_outlined, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
       }
       else{
         return const Icon(Icons.favorite_outline_rounded, size: 27, color: Color.fromRGBO(254, 182, 102, 1),);
       }   
     }
+
+    
     dynamic currentFocus;
     unfocus() {
-    currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
+      currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
     }
 
     @override
     void initState() {
+        getDataForIcon();
         setUrl();
         super.initState(); 
       }
@@ -588,6 +562,23 @@ Widget areaField(){
   void didChangeDependencies() {      
     preCache();
     super.didChangeDependencies();  
+}
+
+void getDataForIcon() async{
+
+      String userId = "";
+
+      final prefs = await SharedPreferences.getInstance();
+      userId = (prefs.getString('userId') ?? '');
+
+      favouriteList = [];
+
+       FirebaseDatabase.instance.ref('Users/$userId/favorite').get().then((value){
+         Map<dynamic, dynamic> map = jsonDecode(jsonEncode(value.value)) as Map<dynamic, dynamic>;
+         map.forEach((key, valueTemp) {
+            favouriteList.add(Dish.fromMap(valueTemp).name);
+        });
+       });    
 }
 
 bool isLoaded = false;
@@ -1014,7 +1005,7 @@ void ShowDialog(context){
                         ],)),
                          GestureDetector(
                                           onTap: (() {
-                                            if(OrderList.order != []){
+                                            if(OrderList.order.isNotEmpty){
                                               Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
