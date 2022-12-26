@@ -231,7 +231,7 @@ import 'order.dart';
                           ))
                           ],),
                             SizedBox(
-                                height: MediaQuery.of(context).size.height*0.35,
+                                height: MediaQuery.of(context).size.height*0.31,
                                 width: MediaQuery.of(context).size.width* 0.9,
                                 child: ListView.separated(
                                         shrinkWrap: false,
@@ -347,12 +347,14 @@ import 'order.dart';
                                         textStyle: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 17,
-                                        fontWeight: FontWeight.w600))],
+                                        fontWeight: FontWeight.w600)),],
                                     labels: const ['Доставка', 'Самовивіз'],
                                     onToggle: (index) {
                                       setState(() {
-                                        initialIndex = index!;
-                                        delivery = !delivery;
+                                        if(initialIndex != index ){
+                                          initialIndex = index!;
+                                          delivery = !delivery;
+                                        }
                                       });
                                     },
                                 )),
@@ -360,6 +362,7 @@ import 'order.dart';
                             )
                           ),
                           infoArea()
+                          //enterInformation()
                           ],)), 
             ])));}
     }
@@ -392,7 +395,7 @@ import 'order.dart';
       else{
         if(delivery){
           return Container(
-            height: MediaQuery.of(context).size.height*0.48,
+            height: MediaQuery.of(context).size.height*0.52,
               width: MediaQuery.of(context).size.width* 0.9,
               alignment: Alignment.center,
               child: Column(
@@ -567,7 +570,6 @@ import 'order.dart';
                                 textStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
-                                //decoration: TextDecoration.underline,
                                 fontWeight: FontWeight.w800))
                     )))]),
                   Row(
@@ -613,7 +615,9 @@ import 'order.dart';
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                    Row(
+                    Container( 
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.04),
+                      child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -621,11 +625,11 @@ import 'order.dart';
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Сума:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 20,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontWeight: FontWeight.w600)))),     
                               Container(
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()}₴", 
@@ -635,45 +639,55 @@ import 'order.dart';
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600))),                                ),
-                        ],),
-                        Row(
+                        ],)),
+                        Container( 
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.04),
+                      child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
                                 child: Text("Доставка:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
                                 child: Text("+40₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w600))),                                ),
-                        ],),
+                                      fontWeight: FontWeight.w600)))),
+                        ],)),
+                        Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.02),
+                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), 
+                            border: Border.all(color: Colors.black, strokeAlign: StrokeAlign.outside, width: 0.2),
+                            color: const Color.fromRGBO(235, 235, 235, 1),
+                            ),
+                          child:
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Разом:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 24,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontWeight: FontWeight.w600)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()+40}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
@@ -681,8 +695,9 @@ import 'order.dart';
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600))),                                ),
-                        ],),
-                        Container(
+                        ],)),
+                        ])),
+                    Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                           child: SwipeableButtonView(
                           buttonText: 'Замовити',
@@ -704,7 +719,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
-                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements()+40, OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
+                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements(), OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
@@ -714,14 +729,13 @@ import 'order.dart';
                                           });
                                         },
                       ))
-                        ]))
                 ],
               )
         );
       }
       else{
         return Container(
-            height: MediaQuery.of(context).size.height*0.48,
+            height: MediaQuery.of(context).size.height*0.52,
               width: MediaQuery.of(context).size.width* 0.9,
               alignment: Alignment.center,
               child: Column(
@@ -886,12 +900,15 @@ import 'order.dart';
                                 fontWeight: FontWeight.w800))
                     )))]),
                   Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                     decoration: DottedDecoration(shape: Shape.line, linePosition: LinePosition.top),
                     child:
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                    Row(
+                    Container( 
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.04),
+                      child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -899,11 +916,11 @@ import 'order.dart';
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Сума:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 20,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontWeight: FontWeight.w600)))),     
                               Container(
                                 margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("${sumOfElements()}₴", 
@@ -913,54 +930,65 @@ import 'order.dart';
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600))),                                ),
-                        ],),
-                        Row(
+                        ],)),
+                        Container( 
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.04),
+                      child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
-                                child: Text("Самовивіз:", 
+                                child: Text("Доставка:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.005),
-                                child: Text("+0₴", 
+                                child: Text("+40₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w600))),                                ),
-                        ],),
+                                      fontWeight: FontWeight.w600)))),
+                        ],)),
+                        Container(
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width*0.02),
+                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10), 
+                            border: Border.all(color: Colors.black, strokeAlign: StrokeAlign.outside, width: 0.2),
+                            color: const Color.fromRGBO(235, 235, 235, 1),
+                            ),
+                          child:
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                                 child: Text("Разом:", 
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poiretOne(
+                                    style: GoogleFonts.montserrat(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 24,
-                                      fontWeight: FontWeight.w800)))),     
+                                      fontWeight: FontWeight.w600)))),     
                               Container(
-                                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                                child: Text("${sumOfElements()}₴", 
+                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
+                                child: Text("${sumOfElements()+40}₴", 
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.nunito(
                                       textStyle: const TextStyle(
                                       color: Color.fromRGBO(31, 31, 47, 1),
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600))),                                ),
-                        ],),
-                        Container(
+                        ],)),
+                        ])),
+                    Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
                           child: SwipeableButtonView(
                           buttonText: 'Замовити',
@@ -982,7 +1010,7 @@ import 'order.dart';
                                             });
                                           },
                           onFinish: () async {
-                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements(), OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
+                              addOrder(address["apartment"], address["building"], address["entrance"], address["floor"], address["street"], sumOfElements()+40, OrderList.order, getTimeText(), getPaymentText(), countOfcutlery);
                               await Navigator.push(context,
                                               PageTransition(
                                                   type: PageTransitionType.fade,
@@ -992,7 +1020,6 @@ import 'order.dart';
                                           });
                                         },
                       ))
-                        ]))
                 ],
               )
         );
@@ -1113,6 +1140,8 @@ import 'order.dart';
                         );}));
     }
 
+    
+
     void openMoneySheet(){
        showDialog<String>(
                  context: context,
@@ -1141,14 +1170,15 @@ import 'order.dart';
                                 customTextStyles: [GoogleFonts.poiretOne(
                                     textStyle: const TextStyle(
                                     color: Colors.black,
-                                    fontSize: 17,
+                                    fontSize: 19,
                                     fontWeight: FontWeight.w600))],
                                 labels: const ["Готівка", "Карткою"],
                                 onToggle: (index) {
                                   setState(() {
+                                    if(secondInitialIndex != index ){
                                     secondInitialIndex = index!;
                                     payment = !payment;
-                                  });
+                                }});
                                 },
                               ));}));
     }
@@ -1160,32 +1190,32 @@ import 'order.dart';
                             sheet: TimePickerSheet(
                               initialDateTime: DateTime.now(),
                               saveButtonColor: const Color.fromRGBO(254, 182, 102, 1),
-                              minuteTitleStyle: GoogleFonts.poiretOne(
+                              minuteTitleStyle: GoogleFonts.montserrat(
                                                 textStyle: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20,
-                                                fontWeight: FontWeight.w800)),
-                              hourTitleStyle: GoogleFonts.poiretOne(
+                                                fontWeight: FontWeight.w600)),
+                              hourTitleStyle: GoogleFonts.montserrat(
                                               textStyle: const TextStyle(
                                               color: Colors.black,
                                               fontSize: 20,
-                                              fontWeight: FontWeight.w800)),
+                                              fontWeight: FontWeight.w600)),
                               sheetCloseIconColor: const Color.fromRGBO(254, 182, 102, 1),
-                              sheetTitleStyle: GoogleFonts.poiretOne(
+                              sheetTitleStyle: GoogleFonts.montserrat(
                                             textStyle: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 20,
-                                            fontWeight: FontWeight.w800)),
-                              wheelNumberSelectedStyle: GoogleFonts.poiretOne(
+                                            fontWeight: FontWeight.w600)),
+                              wheelNumberSelectedStyle: GoogleFonts.montserrat(
                                                         textStyle: const TextStyle(
                                                         color: Color.fromRGBO(254, 182, 102, 1),
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w800)),
-                              wheelNumberItemStyle: GoogleFonts.poiretOne(
+                                                        fontSize: 22,
+                                                        fontWeight: FontWeight.w700)),
+                              wheelNumberItemStyle: GoogleFonts.montserrat(
                                                     textStyle: const TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight.w800)),
+                                                    fontWeight: FontWeight.w600)),
                               minuteInterval: 1,
                               minHour: 6,
                               maxHour: 22,

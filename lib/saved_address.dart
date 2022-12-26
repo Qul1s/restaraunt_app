@@ -297,8 +297,8 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                               style: GoogleFonts.poiretOne(
                                     textStyle: const TextStyle(
                                     color: Color.fromRGBO(31, 31, 47, 1),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w800)))),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w900)))),
                           GestureDetector(
                             onTap:() {
                               Navigator.pop(context);
@@ -342,7 +342,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                   Container(
                           width:MediaQuery.of(context).size.width*0.9,
                           height: MediaQuery.of(context).size.height * 0.03,
@@ -360,13 +360,13 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                   : null,
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                               border: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                             ),
                             style: TextStyle(
                                 fontSize: 16,
@@ -386,7 +386,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                   Container(
                           width:MediaQuery.of(context).size.width*0.9,
                           height: MediaQuery.of(context).size.height * 0.03,
@@ -404,13 +404,13 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                   : null,
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                               border: UnderlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: additionalColor, width: 1.5)),
+                                      BorderSide(color: additionalColor, width: 1)),
                             ),
                             style: TextStyle(
                                 fontSize: 16,
@@ -430,7 +430,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                    Container(
                            width:MediaQuery.of(context).size.width*0.9,
                            height: MediaQuery.of(context).size.height * 0.03,
@@ -448,13 +448,13 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                    : null,
                                focusedBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                enabledBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                border: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                              ),
                              style: TextStyle(
                                  fontSize: 16,
@@ -474,7 +474,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                    Container(
                            width:MediaQuery.of(context).size.width*0.9,
                            height: MediaQuery.of(context).size.height * 0.03,
@@ -492,13 +492,13 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                    : null,
                                focusedBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                enabledBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                border: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                              ),
                              style: TextStyle(
                                  fontSize: 16,
@@ -518,7 +518,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                    Container(
                            width:MediaQuery.of(context).size.width*0.9,
                            height: MediaQuery.of(context).size.height * 0.03,
@@ -536,13 +536,13 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                    : null,
                                focusedBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                enabledBorder: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                                border: UnderlineInputBorder(
                                    borderSide:
-                                       BorderSide(color: additionalColor, width: 1.5)),
+                                       BorderSide(color: additionalColor, width: 1)),
                              ),
                              style: TextStyle(
                                  fontSize: 16,
@@ -562,7 +562,7 @@ void ShowDialog(context, [String code = "0", String text = "Додати адр�
                                                         textStyle: const TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 18,
-                                                        fontWeight: FontWeight.w500))),
+                                                        fontWeight: FontWeight.w600))),
                         Container(
                                 width:MediaQuery.of(context).size.width*0.9,
                                 height: MediaQuery.of(context).size.height * 0.03,

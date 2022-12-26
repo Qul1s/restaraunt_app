@@ -88,7 +88,7 @@ class _RegisterState extends State<RegisterPage> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.2),
                       child: DotStepper(
-                            dotCount: 5,
+                            dotCount: 6,
                             dotRadius: MediaQuery.of(context).size.width * 0.03,
                             shape: Shape.circle,
                             spacing: MediaQuery.of(context).size.width * 0.1,        
@@ -149,7 +149,7 @@ class _RegisterState extends State<RegisterPage> {
     void nextStep(){
     setState(() {
       emailController.clear();
-      if(activeStep != 4){
+      if(activeStep != 5){
         activeStep += 1; 
         }
       else{
