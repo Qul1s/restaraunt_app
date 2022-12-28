@@ -1,6 +1,7 @@
 import 'dart:convert';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -97,6 +98,29 @@ import 'order.dart';
     });
   }
     
+
+    Widget dishImage(image, [fit, width=0, height]){
+  return FutureBuilder <String>(
+    future: loadImage(image),
+    builder: (BuildContext context, AsyncSnapshot<String> image) {
+      if (image.hasData && width!=0) {
+        return Image.network(image.data.toString(), width: width, height: height, fit: fit);  // image is ready
+      }
+      else if(image.hasData && width == 0){
+        return Image.network(image.data.toString());
+      } else {
+        return Container();  // placeholder
+      }
+    },
+  );
+  }
+
+
+Future <String> loadImage(image) async{
+    Reference  ref = FirebaseStorage.instance.ref().child(image);
+    var url = await ref.getDownloadURL();
+    return url;
+}
 
 
    @override
@@ -253,12 +277,7 @@ import 'order.dart';
                                                     width: MediaQuery.of(context).size.height* 0.12,
                                                     height: MediaQuery.of(context).size.height* 0.12,
                                                     alignment: Alignment.center,
-                                                    child: Image.asset(
-                                                            OrderList.order[index].image,
-                                                            width: MediaQuery.of(context).size.height* 0.12,
-                                                            height: MediaQuery.of(context).size.height* 0.12,
-                                                            fit: BoxFit.fill)
-                                                            ),
+                                                    child: dishImage(OrderList.order[index].image, BoxFit.fill, MediaQuery.of(context).size.height* 0.12,MediaQuery.of(context).size.height* 0.12)),
                                                   Column(
                                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                           crossAxisAlignment: CrossAxisAlignment.start,

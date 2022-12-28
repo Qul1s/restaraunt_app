@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:flutterfire_ui/database.dart';
@@ -64,7 +65,28 @@ import 'order.dart';
 
 
   
+Widget dishImage(image, [fit, width=0, height]){
+  return FutureBuilder <String>(
+    future: loadImage(image),
+    builder: (BuildContext context, AsyncSnapshot<String> image) {
+      if (image.hasData && width!=0) {
+        return Image.network(image.data.toString(), width: width, height: height, fit: fit);  // image is ready
+      }
+      else if(image.hasData && width == 0){
+        return Image.network(image.data.toString());
+      } else {
+        return Container();  // placeholder
+      }
+    },
+  );
+  }
 
+
+Future <String> loadImage(image) async{
+    Reference ref = FirebaseStorage.instance.ref().child(image);
+    var url = await ref.getDownloadURL();
+    return url;
+}
     
 
 
@@ -386,8 +408,7 @@ Widget areaField(){
                                                 topLeft: Radius.circular(8),
                                                 topRight: Radius.circular(8),
                                               ),
-                                          child: Image.asset(dish["image"], 
-                                                            fit: BoxFit.contain)),
+                                          child: dishImage(dish["image"])),
                                         GestureDetector(
                                           onTap: (() async {
                                             addToFavorite(dish["name"], dish["categories"], dish["image"], dish["ingridient"], dish["price"]);
@@ -821,11 +842,7 @@ void ShowDialog(context){
                                                   width: MediaQuery.of(context).size.width* 0.32,
                                                   height: MediaQuery.of(context).size.width* 0.32,
                                                   alignment: Alignment.center,
-                                                  child: Image.asset(
-                                                          width: MediaQuery.of(context).size.width* 0.32,
-                                                          height: MediaQuery.of(context).size.width* 0.32,
-                                                          OrderList.order[index].image,
-                                                          fit: BoxFit.fill)),
+                                                  child: dishImage(OrderList.order[index].image, BoxFit.fill, MediaQuery.of(context).size.width* 0.32, MediaQuery.of(context).size.width* 0.32)),
                                                 Column(
                                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -833,7 +850,7 @@ void ShowDialog(context){
                                                           Text(OrderList.order[index].name,
                                                               style: GoogleFonts.poiretOne(
                                                                           textStyle: const TextStyle(
-                                                                          color: Color.fromRGBO(31, 31, 47, 1),
+                                                                          color: Color.fromARGB(255, 9, 9, 161),
                                                                           fontSize: 20,
                                                                           fontWeight: FontWeight.w800))),
                                                           Container(
