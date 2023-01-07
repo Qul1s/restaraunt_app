@@ -1,7 +1,7 @@
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,6 +49,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
     Iconsax.heart,
     Iconsax.profile_2user, 
   ];
+
+
 
 
   double sizeOfIcon(number){
@@ -109,7 +111,28 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin{
 }
       
 
-  
+  Widget dishImage(image, [fit, width=0, height]){
+  return FutureBuilder <String>(
+    future: loadImage(image),
+    builder: (BuildContext context, AsyncSnapshot<String> image) {
+      if (image.hasData && width!=0) {
+        return Image.network(image.data.toString(), width: width, height: height, fit: fit);  // image is ready
+      }
+      else if(image.hasData && width == 0){
+        return Image.network(image.data.toString());
+      } else {
+        return Container();  // placeholder
+      }
+    },
+  );
+  }
+
+
+Future <String> loadImage(image) async{
+    Reference ref = FirebaseStorage.instance.ref().child(image);
+    var url = await ref.getDownloadURL();
+    return url;
+}
 
 
 // ignore: non_constant_identifier_names
@@ -216,11 +239,7 @@ void ShowDialog(context){
                                                   width: MediaQuery.of(context).size.width* 0.32,
                                                   height: MediaQuery.of(context).size.width* 0.32,
                                                   alignment: Alignment.center,
-                                                  child: Image.asset(
-                                                          width: MediaQuery.of(context).size.width* 0.32,
-                                                          height: MediaQuery.of(context).size.width* 0.32,
-                                                          OrderList.order[index].image,
-                                                          fit: BoxFit.fill)),
+                                                  child: dishImage(OrderList.order[index].image, BoxFit.fill, MediaQuery.of(context).size.width* 0.32, MediaQuery.of(context).size.width* 0.32) ),
                                                 Column(
                                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,7 +354,6 @@ void ShowDialog(context){
                          GestureDetector(
                                             onTap: (() {
                                             if(OrderList.order.isNotEmpty){
-                                              print(OrderList.order);
                                               Navigator.push( context,
                                               AwesomePageRoute(
                                                 transitionDuration: const Duration(milliseconds: 600),
@@ -382,4 +400,3 @@ void ShowDialog(context){
      }
   return sum;
 } 
-

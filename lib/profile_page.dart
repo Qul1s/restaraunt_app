@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:awesome_page_transitions/awesome_page_transitions.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -66,6 +67,26 @@ class ProfilePage extends StatefulWidget{
         });
       });
     }
+
+
+  Widget logoImage(){
+    return FutureBuilder <String>(
+      future: loadImage(),
+      builder: (BuildContext context, AsyncSnapshot<String> image) {
+          return Image.network(image.data.toString(), 
+                              height: MediaQuery.of(context).size.height*0.115,
+                              width: MediaQuery.of(context).size.height*0.115, 
+                              fit: BoxFit.contain,); 
+      },
+    );
+  }
+
+
+Future <String> loadImage() async{
+    Reference  ref = FirebaseStorage.instance.ref().child("logo.jpg");
+    var url = await ref.getDownloadURL();
+    return url;
+}
     
 
 
@@ -169,9 +190,7 @@ class ProfilePage extends StatefulWidget{
                           //width: MediaQuery.of(context).size.height*0.13,
                           // child: ClipRRect(
                           //   borderRadius: const BorderRadius.all(Radius.circular(100)),
-                           child: Image.asset("images/logo.jpg",
-                              height: MediaQuery.of(context).size.height*0.115,
-                              width: MediaQuery.of(context).size.height*0.115, fit: BoxFit.contain,)
+                           child: logoImage()
                         ),
                           //),
                         Column(
