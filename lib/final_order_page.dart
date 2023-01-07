@@ -665,22 +665,20 @@ Future <String> loadImage(image) async{
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                child: Text("Доставка:", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500)))),     
-                              Container(
-                                child: Text("+40₴", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)))),
+                              Text("Доставка:", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500))),     
+                              Text("+40₴", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600))),
                         ],)),
                         Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
@@ -696,24 +694,20 @@ Future <String> loadImage(image) async{
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                                child: Text("Разом:", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w600)))),     
-                              Container(
-                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                                child: Text("${sumOfElements()+40}₴", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600))),                                ),
+                              Text("Разом:", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600))),     
+                              Text("${sumOfElements()+40}₴", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600))),
                         ],)),
                         ])),
                     Container(
@@ -956,22 +950,20 @@ Future <String> loadImage(image) async{
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                child: Text("Доставка:", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500)))),     
-                              Container(
-                                child: Text("+40₴", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)))),
+                              Text("Доставка:", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500))),     
+                              Text("+40₴", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600))),
                         ],)),
                         Container(
                           margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
@@ -987,24 +979,20 @@ Future <String> loadImage(image) async{
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                                child: Text("Разом:", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.montserrat(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w600)))),     
-                              Container(
-                                //margin: EdgeInsets.only(top: MediaQuery.of(context).size.height* 0.01),
-                                child: Text("${sumOfElements()+40}₴", 
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.nunito(
-                                      textStyle: const TextStyle(
-                                      color: Color.fromRGBO(31, 31, 47, 1),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600))),                                ),
+                              Text("Разом:", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600))),     
+                              Text("${sumOfElements()+40}₴", 
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: const TextStyle(
+                                    color: Color.fromRGBO(31, 31, 47, 1),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600))),
                         ],)),
                         ])),
                     Container(

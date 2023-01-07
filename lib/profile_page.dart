@@ -68,25 +68,6 @@ class ProfilePage extends StatefulWidget{
       });
     }
 
-
-  Widget logoImage(){
-    return FutureBuilder <String>(
-      future: loadImage(),
-      builder: (BuildContext context, AsyncSnapshot<String> image) {
-          return Image.network(image.data.toString(), 
-                              height: MediaQuery.of(context).size.height*0.115,
-                              width: MediaQuery.of(context).size.height*0.115, 
-                              fit: BoxFit.contain,); 
-      },
-    );
-  }
-
-
-Future <String> loadImage() async{
-    Reference  ref = FirebaseStorage.instance.ref().child("logo.jpg");
-    var url = await ref.getDownloadURL();
-    return url;
-}
     
 
 
@@ -190,7 +171,9 @@ Future <String> loadImage() async{
                           //width: MediaQuery.of(context).size.height*0.13,
                           // child: ClipRRect(
                           //   borderRadius: const BorderRadius.all(Radius.circular(100)),
-                           child: logoImage()
+                           child: Image.asset("images/logo.jpg",
+                              height: MediaQuery.of(context).size.height*0.115,
+                              width: MediaQuery.of(context).size.height*0.115, fit: BoxFit.contain,)
                         ),
                           //),
                         Column(
