@@ -102,7 +102,6 @@ Future <String> loadImage(image) async{
   );
   }
 
-
        
     @override
     Widget build(BuildContext context) {
